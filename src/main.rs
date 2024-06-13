@@ -1,9 +1,11 @@
 mod factory;
 mod validator;
+mod converter;
 
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
+use converter::converter::Converter;
 use factory::command_factory::command_factory;
 use std::process::exit;
 use validator::command_options_validator::validate_command_options;
@@ -21,17 +23,20 @@ fn main() {
         }
     };
 
-    // Localize the time to the from_tz timezone
-    let from_time: DateTime<Tz> = validator
-        .from_tz()
-        .from_local_datetime(&validator.time())
-        .single()
-        .expect("Invalid local time");
+    let res: Result<DateTime<Tz>, String> = Converter::new(
+        validator.time(),
+        validator.from_tz(),
+        validator.to_tz(),
+    ).convert();
 
-    // Convert the time to the target timezone
-    let to_time: DateTime<Tz> = from_time.with_timezone(&validator.to_tz());
-
-    // Print the converted time
-    println!("{}", to_time.format("%Y-%m-%d %H:%M:%S %Z"));
-    exit(0);
+    match res {
+        Ok(_) => {
+            println!("{}", res.unwrap());
+            exit(0);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+            exit(1);
+        }
+    }
 }

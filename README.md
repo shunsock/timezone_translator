@@ -36,17 +36,16 @@ make install
 
 This command performs the following tasks:
 
-Compiles the project with `cargo build --release`.
-Moves the compiled binary from target/release/timezone_converter to /usr/local/bin/tzconv using sudo cp.
+1. Compiles the project with `cargo build --release`.
+2. Copy the compiled binary from `target/release/timezone_converter` to `/usr/local/bin/tzconv`.
 
-### Running the Binary
+### Running the Command
 After installing the binary, you can run it from the command line:
 
 ```bash
 $ tzconv -T "2024-01-01 12:00:00" -f "America/New_York" -t "UTC"
 2024-01-01 17:00:00 UTC
 ```
-
 
 ### Uninstalling
 To remove the installed binary, use the uninstall target:
@@ -55,12 +54,7 @@ To remove the installed binary, use the uninstall target:
 make uninstall
 ```
 
-This command removes the `tzconv` binary from `/usr/local/bin` using sudo rm.
-you can also uninstall manually by running the following command:
-
-```bash
-sudo rm /usr/local/bin/tzconv
-```
+This command removes the `tzconv` binary from `/usr/local/bin`.
 
 Please replace the actual commands and paths with your specific project context.
 

@@ -1,41 +1,19 @@
+mod factory;
 mod validator;
 
-use std::process::exit;
 use chrono::prelude::*;
 use chrono_tz::Tz;
-use clap::{Arg, ArgMatches, Command};
-use validator::validator::{command_validator, Validator};
+use clap::ArgMatches;
+use factory::command_factory::command_factory;
+use std::process::exit;
+use validator::command_options_validator::validate_command_options;
+use validator::validated_command_options::ValidatedCommandOptions;
 
 
 fn main() {
-    let matches: ArgMatches = Command::new("timezone_converter")
-        .version("1.0")
-        .author("Your Name <your.email@example.com>")
-        .about("Converts time between time zones")
-        .arg(Arg::new("time")
-            .short('T')
-            .long("time")
-            .value_name("TIME")
-            .help("Time in the format YYYY-MM-DD HH:MM:SS")
-            .required(true)
-        )
-        .arg(Arg::new("from_timezone")
-            .short('f')
-            .long("from")
-            .value_name("FROM_TIMEZONE")
-            .help("The original timezone (e.g., America/New_York)")
-            .required(true)
-        )
-        .arg(Arg::new("to_timezone")
-            .short('t')
-            .long("to")
-            .value_name("TO_TIMEZONE")
-            .help("The target timezone (e.g., Asia/Tokyo)")
-            .required(true)
-        )
-        .get_matches();
+    let matches: ArgMatches = command_factory();
 
-    let validator: Validator = match command_validator(&matches) {
+    let validator: ValidatedCommandOptions = match validate_command_options(&matches) {
         Ok(v) => v,
         Err(e) => {
             eprintln!("{}", e);

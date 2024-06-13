@@ -1,9 +1,14 @@
+mod validator;
+
+use std::process::exit;
 use chrono::prelude::*;
 use chrono_tz::Tz;
-use clap::{Arg, Command};
+use clap::{Arg, ArgMatches, Command};
+use validator::validator::{command_validator, Validator};
+
 
 fn main() {
-    let matches = Command::new("timezone_converter")
+    let matches: ArgMatches = Command::new("timezone_converter")
         .version("1.0")
         .author("Your Name <your.email@example.com>")
         .about("Converts time between time zones")
@@ -30,24 +35,25 @@ fn main() {
         )
         .get_matches();
 
-    let time_str = matches.get_one::<String>("time").unwrap();
-    let from_tz_str = matches.get_one::<String>("from_timezone").unwrap();
-    let to_tz_str = matches.get_one::<String>("to_timezone").unwrap();
-
-    // Parse the input time
-    let naive_time = NaiveDateTime::parse_from_str(time_str, "%Y-%m-%d %H:%M:%S").expect("Invalid time format");
-
-    // Parse the timezones
-    let from_tz: Tz = from_tz_str.parse().expect("Invalid from timezone");
-    let to_tz: Tz = to_tz_str.parse().expect("Invalid to timezone");
+    let validator: Validator = match command_validator(&matches) {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("{}", e);
+            exit(1);
+        }
+    };
 
     // Localize the time to the from_tz timezone
-    let from_time = from_tz.from_local_datetime(&naive_time).single().expect("Invalid local time");
+    let from_time: DateTime<Tz> = validator
+        .from_tz()
+        .from_local_datetime(&validator.time())
+        .single()
+        .expect("Invalid local time");
 
     // Convert the time to the target timezone
-    let to_time = from_time.with_timezone(&to_tz);
+    let to_time: DateTime<Tz> = from_time.with_timezone(&validator.to_tz());
 
     // Print the converted time
-    println!("Converted time: {}", to_time.format("%Y-%m-%d %H:%M:%S %Z"));
+    println!("{}", to_time.format("%Y-%m-%d %H:%M:%S %Z"));
+    exit(0);
 }
-

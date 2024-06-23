@@ -1,9 +1,9 @@
 use clap::{Arg, Command, ArgMatches};
 
 pub(crate) fn command_factory () -> ArgMatches {
-    Command::new("timezone_converter")
+    Command::new("timezone_translator")
         .version("1.0")
-        .author("Your Name <your.email@example.com>")
+        .author("Your Name s.tsuchiya.business@gmail.com")
         .about("Converts time between time zones")
         .arg(Arg::new("time")
             .short('T')

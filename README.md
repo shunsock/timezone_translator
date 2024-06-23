@@ -1,4 +1,4 @@
-# timezone_converter
+# Time Zone Translator
 ## Overview
 This project is a simple command-line utility that converts a given time from one timezone to another.
 
@@ -10,7 +10,7 @@ This project is a simple command-line utility that converts a given time from on
 The timezone_converter binary takes two arguments: the time to convert and the target timezone.
 
 ```bash
-$ tzconv -T "2024-01-01 12:00:00" -f "America/New_York" -t "UTC"
+$ tzt -T "2024-01-01 12:00:00" -f "America/New_York" -t "UTC"
 2024-01-01 17:00:00 UTC
 ```
 
@@ -43,18 +43,18 @@ This command performs the following tasks:
 After installing the binary, you can run it from the command line:
 
 ```bash
-$ tzconv -T "2024-01-01 12:00:00" -f "America/New_York" -t "UTC"
+$ tzt -T "2024-01-01 12:00:00" -f "America/New_York" -t "UTC"
 2024-01-01 17:00:00 UTC
 ```
 
 ### Uninstalling
-To remove the installed binary, use the uninstall target:
+To remove the installed binary, use the `uninstall` command:
 
 ```bash
 make uninstall
 ```
 
-This command removes the `tzconv` binary from `/usr/local/bin`.
+This command removes the `tzt` binary from `/usr/local/bin`.
 
 Please replace the actual commands and paths with your specific project context.
 

@@ -16,7 +16,7 @@ mod tests {
     use chrono::NaiveDateTime;
 
     /// Test that a valid time string is valid
-    /// expected: Ok(NaiveDateTime)
+    /// expected: `Ok(NaiveDateTime)`
     #[test]
     fn test_validate_string_for_native_datetime_valid() {
         // Check that a valid time string pass the validator
@@ -31,7 +31,7 @@ mod tests {
 
     /// Test that an invalid format is invalid
     /// we expect the format to be "%Y-%m-%d %H:%M:%S"
-    /// expected: Err(ValidationError::InvalidTimeFormat)
+    /// expected: `Err(ValidationError::InvalidTimeFormat)`
     #[test]
     fn test_validate_string_for_native_datetime_invalid_format() {
         let time_str = "2024-06-27T12:34:56";
@@ -40,7 +40,7 @@ mod tests {
     }
 
     /// Test that an empty string is invalid
-    /// expected: Err(ValidationError::InvalidTimeFormat)
+    /// expected: `Err(ValidationError::InvalidTimeFormat)`
     #[test]
     fn test_validate_string_for_native_datetime_empty_string() {
         let time_str = "";
@@ -49,7 +49,7 @@ mod tests {
     }
 
     /// Test that a partial string is invalid
-    /// expected: Err(ValidationError::InvalidTimeFormat)
+    /// expected: `Err(ValidationError::InvalidTimeFormat)`
     #[test]
     fn test_validate_string_for_native_datetime_partial_string() {
         let time_str = "2024-06-27";

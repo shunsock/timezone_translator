@@ -27,7 +27,7 @@ mod tests {
     }
 
     /// Test that an invalid timezone is invalid
-    /// expected: Err(ValidationError::InvalidTimezone)
+    /// expected: `Err(ValidationError::InvalidTimezone)`
     #[test]
     fn test_validate_string_for_timezone_invalid() {
         let tz_str = "Invalid/Timezone";
@@ -36,7 +36,7 @@ mod tests {
     }
 
     /// Test that an empty string is invalid
-    /// expected: Err(ValidationError::InvalidTimezone)
+    /// expected: `Err(ValidationError::InvalidTimezone)`
     #[test]
     fn test_validate_string_for_timezone_empty_string() {
         let tz_str = "";
@@ -45,7 +45,7 @@ mod tests {
     }
 
     /// Test that a partial string is invalid
-    /// expected: Err(ValidationError::InvalidTimezone)
+    /// expected: `Err(ValidationError::InvalidTimezone)`
     #[test]
     fn test_validate_string_for_timezone_partial_string() {
         let tz_str = "America";

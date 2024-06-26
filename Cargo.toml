@@ -1,5 +1,5 @@
 [package]
-name = "timezone_converter"
+name = "timezone_translator"
 version = "0.1.0"
 edition = "2021"
 

@@ -5,7 +5,7 @@ mod translator;
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use translator::translator::Converter;
+use translator::translator::TimezoneTranslator;
 use factory::command_factory::command_factory;
 use std::process::exit;
 use validator::command_options_validator::validate_command_options;
@@ -23,7 +23,7 @@ fn main() {
         }
     };
 
-    let res: Result<DateTime<Tz>, String> = Converter::new(
+    let res: Result<DateTime<Tz>, String> = TimezoneTranslator::new(
         validator.time(),
         validator.from_tz(),
         validator.to_tz(),

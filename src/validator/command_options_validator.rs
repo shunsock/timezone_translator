@@ -11,45 +11,17 @@ pub(crate) fn validate_command_options(arg: &ArgMatches) -> Result<ValidatedComm
     // arg.get_one::<String>("time") returns Option<&String>, but clap validates the required option
     // thus, we can safely unwrap the value
     let time_str: &String = arg.get_one::<String>("time").unwrap();
-
-    let time_validated: NaiveDateTime = match validate_string_for_native_datetime(&time_str) {
-        Ok(time) => time,
-        Err(e) => {
-            return Err(
-                ValidationError::InvalidTimeFormat(
-                    format!("{}", e)
-                )
-            )
-        }
-    };
+    let time_validated: NaiveDateTime = validate_string_for_native_datetime(&time_str)?;
 
     // arg.get_one::<String>("from_timezone") returns Option<&String>, but clap validates the required option
     // thus, we can safely unwrap the value
     let from_tz_str: &String = arg.get_one::<String>("from_timezone").unwrap();
-    let from_tz_validated : Tz = match validate_string_for_timezone(&from_tz_str) {
-        Ok(from_timezone) => from_timezone,
-        Err(e) => {
-            return Err(
-                ValidationError::InvalidTimezone(
-                    format!("{}", e)
-                )
-            )
-        }
-    };
+    let from_tz_validated : Tz = validate_string_for_timezone(&from_tz_str)?;
 
     // arg.get_one::<String>("to_timezone") returns Option<&String>, but clap validates the required option
     // thus, we can safely unwrap the value
     let to_tz_str: &String = arg.get_one::<String>("to_timezone").unwrap();
-    let to_tz_validated: Tz = match validate_string_for_timezone(&to_tz_str) {
-        Ok(to_timezone) => to_timezone,
-        Err(e) => {
-            return Err(
-                ValidationError::InvalidTimezone(
-                    format!("{}", e)
-                )
-            )
-        }
-    };
+    let to_tz_validated: Tz = validate_string_for_timezone(&to_tz_str)?;
 
     // Return validated options
     Ok(

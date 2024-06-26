@@ -1,13 +1,13 @@
 use chrono::{DateTime, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
 
-pub(crate) struct Converter {
+pub(crate) struct TimezoneTranslator {
     time: NaiveDateTime,
     from_tz: Tz,
     to_tz: Tz,
 }
 
-impl Converter {
+impl TimezoneTranslator {
     pub(crate) fn new(time: NaiveDateTime, from_tz: Tz, to_tz: Tz) -> Self {
         Self {
             time,

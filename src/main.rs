@@ -23,20 +23,12 @@ fn main() {
         }
     };
 
-    let res: Result<DateTime<Tz>, String> = TimezoneTranslator::new(
+    let date_time_mapped: DateTime<Tz> = TimezoneTranslator::new(
         validator.time(),
         validator.from_tz(),
         validator.to_tz(),
     ).convert();
 
-    match res {
-        Ok(_) => {
-            println!("{}", res.unwrap());
-            exit(0);
-        }
-        Err(e) => {
-            eprintln!("{}", e);
-            exit(1);
-        }
-    }
+    println!("{}", date_time_mapped.unwrap());
+    exit(0);
 }

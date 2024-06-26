@@ -16,25 +16,11 @@ impl TimezoneTranslator {
         }
     }
 
-    pub(crate) fn convert(&self) -> Result<DateTime<Tz>, String> {
+    pub(crate) fn convert(&self) -> DateTime<Tz> {
         // Extract the time from the `time` field with `from_tz` field
-        let from_time_with_timezone : Option<DateTime<Tz>> = self.from_tz
+        self.from_tz
             .from_local_datetime(&self.time)
-            .single();
-
-        // Check if the time exists in the timezone
-        return match from_time_with_timezone.is_none() {
-            // Return an error if the time does not exist in the timezone
-            true => {
-                Err(
-                    format!(
-                        "Converter Error: {} does not exist in timezone {}",
-                        self.time, self.from_tz
-                    )
-                )
-            }
-            // Convert the time to the `to_tz` timezone
-            false => Ok(from_time_with_timezone.unwrap().with_timezone(&self.to_tz)),
-        }
+            .single()
+            .with_timezone(&self.from_tz);
     }
 }

@@ -1,11 +1,11 @@
 mod factory;
 mod validator;
-mod converter;
+mod translator;
 
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use converter::converter::Converter;
+use translator::translator::Converter;
 use factory::command_factory::command_factory;
 use std::process::exit;
 use validator::command_options_validator::validate_command_options;

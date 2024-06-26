@@ -6,6 +6,7 @@ use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
 use translator::translator::TimezoneTranslator;
+use translator::translation_error::TranslationError;
 use factory::command_factory::command_factory;
 use std::process::exit;
 use validator::command_options_validator::validate_command_options;
@@ -23,12 +24,14 @@ fn main() {
         }
     };
 
-    let date_time_mapped: DateTime<Tz> = TimezoneTranslator::new(
+    let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
         validator.time(),
         validator.from_tz(),
         validator.to_tz(),
     ).convert();
 
-    println!("{}", date_time_mapped.unwrap());
-    exit(0);
+    match date_time_mapped {
+        Ok(mapped) => println!("{}", mapped),
+        Err(e) => eprintln!("{}", e),
+    }
 }

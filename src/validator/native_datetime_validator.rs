@@ -1,13 +1,11 @@
-use chrono::{NaiveDateTime, ParseResult};
+use chrono::NaiveDateTime;
+use super::validation_error::ValidationError;
 
-pub(super) fn validate_string_for_native_datetime(time: &str) -> Result<NaiveDateTime, String> {
-    let datetime: ParseResult<NaiveDateTime> = NaiveDateTime::parse_from_str(
+pub(super) fn validate_string_for_native_datetime(time: &str) -> Result<NaiveDateTime, ValidationError> {
+    NaiveDateTime::parse_from_str(
         time,
         "%Y-%m-%d %H:%M:%S"
-    );
-
-    match datetime {
-        Ok(dt) => Ok(dt),
-        Err(_) => Err(String::from("Validation Error: Invalid time format")),
-    }
+    ).map_err(
+        |_| ValidationError::InvalidTimeFormat(time.to_string())
+    )
 }

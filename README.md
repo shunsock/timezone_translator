@@ -5,6 +5,8 @@ This project is a simple command-line utility that converts a given time from on
 ## Features
 - Convert a given time from one timezone to another.
 - Supports multiple timezones.
+  - if you want to see the list of supported timezones, read following url.
+  - https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html
 
 ## Usage
 The timezone_converter binary takes two arguments: the time to convert and the target timezone.

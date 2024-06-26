@@ -32,3 +32,86 @@ pub(crate) fn validate_command_options(arg: &ArgMatches) -> Result<ValidatedComm
         )
     )
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::NaiveDateTime;
+    use chrono_tz::Tz;
+    use clap::{Arg, ArgMatches, Command};
+    use crate::validator::validation_error::ValidationError;
+
+    // Helper function to create ArgMatches for testing
+    fn create_arg_matches(time: &str, from_tz: &str, to_tz: &str) -> ArgMatches {
+        Command::new("test")
+            .arg(Arg::new("time").required(true))
+            .arg(Arg::new("from_timezone").required(true))
+            .arg(Arg::new("to_timezone").required(true))
+            .get_matches_from(vec![
+                "test",
+                time,
+                from_tz,
+                to_tz,
+            ])
+    }
+
+    /// Test that valid command options are valid
+    /// expected: `Ok(ValidatedCommandOptions)`
+    #[test]
+    fn test_validate_command_options_valid() {
+        let matches: ArgMatches = create_arg_matches(
+            "2024-06-27 12:34:56",
+            "America/New_York",
+            "Europe/London"
+        );
+
+        // Confirm that the validation passes
+        let result: Result<ValidatedCommandOptions, ValidationError> = validate_command_options(&matches);
+        assert!(result.is_ok());
+
+        // Confirm that the validated options are as expected
+        let validated_options: ValidatedCommandOptions = result.unwrap();
+        assert_eq!(validated_options.time(), NaiveDateTime::parse_from_str("2024-06-27 12:34:56", "%Y-%m-%d %H:%M:%S").unwrap());
+        assert_eq!(validated_options.from_tz(), "America/New_York".parse::<Tz>().unwrap());
+        assert_eq!(validated_options.to_tz(), "Europe/London".parse::<Tz>().unwrap());
+    }
+
+    /// Test that an invalid time is invalid
+    /// expected: `Err(ValidationError::InvalidTime)`
+    #[test]
+    fn test_validate_command_options_invalid_time() {
+        let matches: ArgMatches = create_arg_matches(
+            "invalid-time",
+            "America/New_York",
+            "Europe/London"
+        );
+        let result: Result<ValidatedCommandOptions, ValidationError>  = validate_command_options(&matches);
+        assert!(result.is_err());
+    }
+
+    /// Test that an invalid from timezone is invalid
+    /// expected: `Err(ValidationError::InvalidTimezone)`
+    #[test]
+    fn test_validate_command_options_invalid_from_timezone() {
+        let matches: ArgMatches = create_arg_matches(
+            "2024-06-27 12:34:56",
+            "Invalid/Timezone",
+            "Europe/London"
+        );
+        let result: Result<ValidatedCommandOptions, ValidationError> = validate_command_options(&matches);
+        assert!(result.is_err());
+    }
+
+    /// Test that an invalid to timezone is invalid
+    /// expected: `Err(ValidationError::InvalidTimezone)`
+    #[test]
+    fn test_validate_command_options_invalid_to_timezone() {
+        let matches: ArgMatches = create_arg_matches(
+            "2024-06-27 12:34:56",
+            "America/New_York",
+            "Invalid/Timezone"
+        );
+        let result: Result<ValidatedCommandOptions, ValidationError> = validate_command_options(&matches);
+        assert!(result.is_err());
+    }
+}

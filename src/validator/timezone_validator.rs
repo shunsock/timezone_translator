@@ -1,10 +1,9 @@
-use chrono_tz::Tz;
 use super::validation_error::ValidationError;
+use chrono_tz::Tz;
 
 pub(super) fn validate_string_for_timezone(tz: &str) -> Result<Tz, ValidationError> {
-    tz.parse::<Tz>().map_err(
-        |_| ValidationError::InvalidTimezone(tz.to_string())
-    )
+    tz.parse::<Tz>()
+        .map_err(|_| ValidationError::InvalidTimezone(tz.to_string()))
 }
 
 #[cfg(test)]

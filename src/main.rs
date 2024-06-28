@@ -1,17 +1,16 @@
 mod factory;
-mod validator;
 mod translator;
+mod validator;
 
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use translator::translator::TimezoneTranslator;
-use translator::translation_error::TranslationError;
 use factory::command_factory::command_factory;
 use std::process::exit;
+use translator::translation_error::TranslationError;
+use translator::translator::TimezoneTranslator;
 use validator::command_options_validator::validate_command_options;
 use validator::validated_command_options::ValidatedCommandOptions;
-
 
 fn main() {
     let matches: ArgMatches = command_factory();
@@ -24,11 +23,8 @@ fn main() {
         }
     };
 
-    let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
-        validator.time(),
-        validator.from_tz(),
-        validator.to_tz(),
-    ).convert();
+    let date_time_mapped: Result<DateTime<Tz>, TranslationError> =
+        TimezoneTranslator::new(validator.time(), validator.from_tz(), validator.to_tz()).convert();
 
     match date_time_mapped {
         Ok(mapped) => println!("{}", mapped),

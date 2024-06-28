@@ -1,6 +1,6 @@
+use super::translation_error::TranslationError;
 use chrono::{DateTime, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
-use super::translation_error::TranslationError;
 
 pub(crate) struct TimezoneTranslator {
     time: NaiveDateTime,
@@ -19,9 +19,7 @@ impl TimezoneTranslator {
 
     pub(crate) fn convert(&self) -> Result<DateTime<Tz>, TranslationError> {
         // Extract the time from the `time` field with `from_tz` field
-        let mapped: Option<DateTime<Tz>> = self.from_tz
-            .from_local_datetime(&self.time)
-            .single();
+        let mapped: Option<DateTime<Tz>> = self.from_tz.from_local_datetime(&self.time).single();
 
         match mapped {
             Some(time) => Ok(time.with_timezone(&self.to_tz)),
@@ -53,11 +51,7 @@ mod tests {
         let from_tz: Tz = "America/New_York".parse().unwrap();
         let to_tz: Tz = "Europe/London".parse().unwrap();
 
-        let translator: TimezoneTranslator = TimezoneTranslator::new(
-            time,
-            from_tz,
-            to_tz
-        );
+        let translator: TimezoneTranslator = TimezoneTranslator::new(time, from_tz, to_tz);
 
         assert_eq!(translator.time, time);
         assert_eq!(translator.from_tz, from_tz);

@@ -12,8 +12,8 @@
   <a href="./LICENSE">
     <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-blue.svg?maxAge=43200">
   </a>
-  <a href="https://github.com/shunsock/timezone_translator/workflows/rust/badge.svg">
-    <img alt="workflow" src="https://github.com/shunsock/timezone_translator/workflows/rust/badge.svg)">
+  <a href="https://github.com/shunsock/timezone_translator/actions/workflows/rust/badge.svg">
+    <img alt="workflow" src="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml/badge.svg)">
   </a>
 </div>
 

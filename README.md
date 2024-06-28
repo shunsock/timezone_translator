@@ -7,6 +7,9 @@
 <h2 align="center">
   tzt - Timezone Translator
 </h2>
+<p align="center">
+  simple command-line utility that converts a given time from one timezone to another.
+</p>
 
 <div align="center">
   <a href="./LICENSE">
@@ -19,9 +22,6 @@
     <img alt="workflow" src="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml/badge.svg">
   </a>
 </div>
-
-## Overview
-This project is a simple command-line utility that converts a given time from one timezone to another.
 
 ## Features
 - Convert a given time from one timezone to another.

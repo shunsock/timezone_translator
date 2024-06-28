@@ -16,9 +16,15 @@ impl ValidatedCommandOptions {
         }
     }
 
-    pub(crate) fn time(&self) -> NaiveDateTime { self.time }
+    pub(crate) fn time(&self) -> NaiveDateTime {
+        self.time
+    }
 
-    pub(crate) fn from_tz(&self) -> Tz { self.from_tz }
+    pub(crate) fn from_tz(&self) -> Tz {
+        self.from_tz
+    }
 
-    pub(crate) fn to_tz(&self) -> Tz { self.to_tz }
+    pub(crate) fn to_tz(&self) -> Tz {
+        self.to_tz
+    }
 }

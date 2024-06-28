@@ -15,7 +15,9 @@
   <a href="https://www.rust-lang.org/">
     <img alt="rust" src="https://img.shields.io/badge/logo-rust-blue?logo=rust">
   </a>
-  <img alt="workflow" src="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml/badge.svg">
+  <a href="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml">
+    <img alt="workflow" src="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml/badge.svg">
+  </a>
 </div>
 
 ## Overview

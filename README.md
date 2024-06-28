@@ -12,6 +12,9 @@
   <a href="./LICENSE">
     <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-blue.svg?maxAge=43200">
   </a>
+  <a href="https://www.rust-lang.org/">
+    <img alt="rust" src="https://img.shields.io/badge/logo-rust-blue?logo=rust">
+  </a>
   <img alt="workflow" src="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml/badge.svg">
 </div>
 

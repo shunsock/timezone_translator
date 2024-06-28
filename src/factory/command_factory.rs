@@ -1,6 +1,6 @@
-use clap::{Arg, Command, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 
-pub(crate) fn command_factory () -> ArgMatches {
+pub(crate) fn command_factory() -> ArgMatches {
     Command::new("timezone_translator")
         .version("1.0")
         .author("Your Name s.tsuchiya.business@gmail.com")

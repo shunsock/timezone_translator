@@ -1,4 +1,22 @@
-# Time Zone Translator (TZT)
+<div align="center">
+  <a href="https://github.com/shunsock/timezone_translator">
+    <img alt="tzt" src="image/txt_icon.jpg">
+  </a>
+</div>
+
+<h2 align="center">
+  tzt - Timezone Translator
+</h2>
+
+<div align="center">
+  <a href="./LICENSE">
+    <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-blue.svg?maxAge=43200">
+  </a>
+  <a href="https://github.com/shunsock/timezone_translator/workflows/rust/badge.svg">
+    <img alt="workflow" src="https://github.com/shunsock/timezone_translator/workflows/rust/badge.svg)">
+  </a>
+</div>
+
 ## Overview
 This project is a simple command-line utility that converts a given time from one timezone to another.
 

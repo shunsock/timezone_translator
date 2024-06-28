@@ -404,6 +404,7 @@ dependencies = [
  "chrono",
  "chrono-tz",
  "clap",
+ "regex",
  "thiserror",
 ]
 

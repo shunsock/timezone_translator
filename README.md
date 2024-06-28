@@ -11,17 +11,14 @@
   simple command-line utility that converts a given time from one timezone to another.
 </p>
 
-<div align="center">
+<p align="center">
   <a href="./LICENSE">
-    <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-blue.svg?maxAge=43200">
-  </a>
+    <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-blue.svg?maxAge=43200"></a>
   <a href="https://www.rust-lang.org/">
-    <img alt="rust" src="https://img.shields.io/badge/logo-rust-blue?logo=rust">
-  </a>
+    <img alt="rust" src="https://img.shields.io/badge/logo-rust-blue?logo=rust"></a>
   <a href="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml">
-    <img alt="workflow" src="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml/badge.svg">
-  </a>
-</div>
+    <img alt="workflow" src="https://github.com/shunsock/timezone_translator/actions/workflows/rust.yml/badge.svg"></a>
+</p>
 
 ## Features
 - Convert a given time from one timezone to another.

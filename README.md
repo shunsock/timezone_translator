@@ -59,7 +59,7 @@ This project uses a Makefile for managing build and installation tasks. Here are
 To install the binary, you can use the following command.
 
 ```bash
-curl -L -o /usr/local/bin/timezone_translator https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
+sudo curl -L -o /usr/local/bin/timezone_translator https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
   sudo chmod +x /usr/local/bin/timezone_translator
 ```
 

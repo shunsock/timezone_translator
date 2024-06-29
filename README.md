@@ -55,7 +55,16 @@ This project uses a Makefile for managing build and installation tasks. Here are
 1. Clone the repository to your local machine.
 2. Navigate to the project root directory where the Makefile is located.
 
-### Building and Installing
+### Install
+To install the binary, you can use the following command.
+
+```bash
+curl -L -o /usr/local/bin/timezone_translator https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
+  sudo chmod +x /usr/local/bin/timezone_translator
+```
+
+### Install (from source)
+You can also build and install the binary from source.
 To build and install the project, you can use the `install` target in the Makefile.
 
 ```bash

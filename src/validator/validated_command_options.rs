@@ -1,6 +1,6 @@
+use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use chrono::NaiveDateTime;
 use chrono_tz::Tz;
-use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
 
 pub(crate) struct ValidatedCommandOptions {
     time: NaiveDateTime,

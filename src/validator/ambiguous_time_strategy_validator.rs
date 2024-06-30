@@ -37,9 +37,8 @@ mod tests {
     /// expect: `ValidationError::InvalidAmbiguousTimeStrategy`
     #[test]
     fn test_invalid_ambiguous_time_strategy() {
-        let res: Result<AmbiguousTimeStrategy, ValidationError> = validate_string_for_ambiguous_time_strategy(
-            "invalid"
-        );
+        let res: Result<AmbiguousTimeStrategy, ValidationError> =
+            validate_string_for_ambiguous_time_strategy("invalid");
 
         // check status is error
         assert!(res.is_err());

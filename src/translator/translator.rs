@@ -1,12 +1,6 @@
 use super::translation_error::TranslationError;
-use chrono::{
-    DateTime,
-    MappedLocalTime,
-    NaiveDateTime,
-    LocalResult,
-    TimeZone
-};
 use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
+use chrono::{DateTime, LocalResult, MappedLocalTime, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
 
 pub(crate) struct TimezoneTranslator {
@@ -37,14 +31,14 @@ impl TimezoneTranslator {
 
         match mapped {
             LocalResult::Single(time) => Ok(time.with_timezone(&self.to_tz)),
-            LocalResult::Ambiguous(time_earliest, time_latest) => Ok(
-                select_time_with_ambiguous_time_strategy(
+            LocalResult::Ambiguous(time_earliest, time_latest) => {
+                Ok(select_time_with_ambiguous_time_strategy(
                     self.ambiguous_time_strategy,
                     self.to_tz,
                     time_earliest,
                     time_latest,
-                ),
-            ),
+                ))
+            }
             LocalResult::None => {
                 let error = TranslationError::TranslationError {
                     time: self.time,
@@ -86,12 +80,8 @@ mod tests {
         let to_tz: Tz = "Europe/London".parse().unwrap();
         let ambiguous_time_strategy: AmbiguousTimeStrategy = AmbiguousTimeStrategy::Earliest;
 
-        let translator: TimezoneTranslator = TimezoneTranslator::new(
-            time,
-            from_tz,
-            to_tz,
-            ambiguous_time_strategy,
-        );
+        let translator: TimezoneTranslator =
+            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
 
         assert_eq!(translator.time, time);
         assert_eq!(translator.from_tz, from_tz);
@@ -119,12 +109,8 @@ mod tests {
             .with_timezone(&to_tz);
 
         // calculate the actual result
-        let translator: TimezoneTranslator = TimezoneTranslator::new(
-            time,
-            from_tz,
-            to_tz,
-            ambiguous_time_strategy,
-        );
+        let translator: TimezoneTranslator =
+            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
         let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
 
         assert!(actual_converted_time.is_ok());
@@ -155,12 +141,8 @@ mod tests {
             .with_timezone(&to_tz);
 
         // calculate the actual result
-        let translator: TimezoneTranslator = TimezoneTranslator::new(
-            time,
-            from_tz,
-            to_tz,
-            ambiguous_time_strategy,
-        );
+        let translator: TimezoneTranslator =
+            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
         let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
 
         assert!(actual_converted_time.is_ok());
@@ -191,12 +173,8 @@ mod tests {
             .with_timezone(&to_tz);
 
         // calculate the actual result
-        let translator: TimezoneTranslator = TimezoneTranslator::new(
-            time,
-            from_tz,
-            to_tz,
-            ambiguous_time_strategy,
-        );
+        let translator: TimezoneTranslator =
+            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
         let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
 
         assert!(actual_converted_time.is_ok());

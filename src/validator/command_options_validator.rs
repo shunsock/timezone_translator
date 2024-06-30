@@ -1,12 +1,12 @@
 use super::native_datetime_validator::validate_string_for_native_datetime;
 use super::timezone_validator::validate_string_for_timezone;
 use super::validated_command_options::ValidatedCommandOptions;
+use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
+use crate::validator::ambiguous_time_strategy_validator::validate_string_for_ambiguous_time_strategy;
 use crate::validator::validation_error::ValidationError;
 use chrono::NaiveDateTime;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
-use crate::validator::ambiguous_time_strategy_validator::validate_string_for_ambiguous_time_strategy;
 
 pub(crate) fn validate_command_options(
     arg: &ArgMatches,
@@ -28,20 +28,18 @@ pub(crate) fn validate_command_options(
 
     // arg.get_one::<String>("ambiguous_time_strategy") returns Option<&String>, but clap set the default value
     // thus, we can safely unwrap the value
-    let ambiguous_time_strategy_str: &String = arg.get_one::<String>("ambiguous_time_strategy").unwrap();
-    let ambiguous_time_strategy_validated: AmbiguousTimeStrategy = validate_string_for_ambiguous_time_strategy(
-        &ambiguous_time_strategy_str
-    )?;
+    let ambiguous_time_strategy_str: &String =
+        arg.get_one::<String>("ambiguous_time_strategy").unwrap();
+    let ambiguous_time_strategy_validated: AmbiguousTimeStrategy =
+        validate_string_for_ambiguous_time_strategy(&ambiguous_time_strategy_str)?;
 
     // Return validated options
-    Ok(
-        ValidatedCommandOptions::new(
-            time_validated,
-            from_tz_validated,
-            to_tz_validated,
-            ambiguous_time_strategy_validated,
-        )
-    )
+    Ok(ValidatedCommandOptions::new(
+        time_validated,
+        from_tz_validated,
+        to_tz_validated,
+        ambiguous_time_strategy_validated,
+    ))
 }
 
 #[cfg(test)]

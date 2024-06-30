@@ -9,4 +9,7 @@ pub enum ValidationError {
         "Invalid timezone found: {0}. @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html"
     )]
     InvalidTimezone(String),
+
+    #[error("Invalid ambiguous time strategy found: {ambiguous_time_strategy} (expected: earliest, latest)")]
+    InvalidAmbiguousTimeStrategy { ambiguous_time_strategy: String },
 }

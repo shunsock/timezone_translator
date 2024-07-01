@@ -182,4 +182,24 @@ mod tests {
         // confirm if the actual result is the same as the expected result
         assert_eq!(actual_converted_time.unwrap(), expected_time);
     }
+
+    /// This test checks if the `convert` method returns an error when the output time does not exist.
+    /// expected: `TranslationError`
+    #[test]
+    fn test_output_timestamp_does_not_exist() {
+        // input for the test
+        let date: NaiveDate = NaiveDate::from_ymd_opt(2024, 03, 10).unwrap();
+        let time: NaiveDateTime = date.and_hms_opt(02, 30, 0).unwrap();
+        let from_tz: Tz = "America/New_York".parse().unwrap();
+        let to_tz: Tz = "America/Los_Angeles".parse().unwrap();
+        let ambiguous_time_strategy: AmbiguousTimeStrategy = AmbiguousTimeStrategy::Latest;
+
+        // calculate the actual result
+        let translator: TimezoneTranslator =
+            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
+        let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
+
+        // check result is error
+        assert!(actual_converted_time.is_err());
+    }
 }

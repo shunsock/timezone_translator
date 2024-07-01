@@ -4,7 +4,7 @@ use thiserror;
 
 #[derive(thiserror::Error, Debug)]
 pub(crate) enum TranslationError {
-    #[error("Translation Error: {time} from {from_tz} to {to_tz}")]
+    #[error("Translation Error: Output time and timezone does not exist. Please check DST rules.")]
     TranslationError {
         time: NaiveDateTime,
         from_tz: Tz,

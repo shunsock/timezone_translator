@@ -26,5 +26,13 @@ pub(crate) fn command_factory() -> ArgMatches {
             .help("The target timezone (e.g. Asia/Tokyo) @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html#")
             .required(true)
         )
+        .arg(Arg::new("ambiguous_time_strategy")
+            .short('a')
+            .long("ambiguous-time-strategy")
+            .value_name("STRATEGY")
+            .help("Strategy to use for ambiguous times (earliest, latest)")
+            .default_value("earliest")
+            .required(false)
+        )
         .get_matches()
 }

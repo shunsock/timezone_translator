@@ -23,8 +23,13 @@ fn main() {
         }
     };
 
-    let date_time_mapped: Result<DateTime<Tz>, TranslationError> =
-        TimezoneTranslator::new(validator.time(), validator.from_tz(), validator.to_tz()).convert();
+    let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
+        validator.time(),
+        validator.from_tz(),
+        validator.to_tz(),
+        validator.ambiguous_time_strategy(),
+    )
+    .convert();
 
     match date_time_mapped {
         Ok(mapped) => println!("{}", mapped),

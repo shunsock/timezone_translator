@@ -1,11 +1,8 @@
-use clap::Command;
-use super::helper::local_timezone_string_provider::provide_local_timezone_string;
 use super::arguments::{
-    ambiguous_time_strategy::ambiguous_time_strategy,
-    from::from,
-    time::time,
-    to::to
+    ambiguous_time_strategy::ambiguous_time_strategy, from::from, time::time, to::to,
 };
+use super::helper::local_timezone_string_provider::provide_local_timezone_string;
+use clap::Command;
 
 /// # About:
 /// Provides the command definition for the `tzt` command.

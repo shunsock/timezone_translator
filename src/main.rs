@@ -5,12 +5,12 @@ mod validator;
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
+use command::options::validated_user_inputs::ValidatedCommandOptions;
 use command::receiver::receive_user_input;
 use std::process::exit;
 use translator::translation_error::TranslationError;
 use translator::translator::TimezoneTranslator;
 use validator::command_options_validator::validate_command_options;
-use command::options::validated_user_inputs::ValidatedCommandOptions;
 
 fn main() {
     let matches: ArgMatches = receive_user_input();

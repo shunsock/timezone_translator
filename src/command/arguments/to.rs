@@ -1,8 +1,6 @@
 use clap::Arg;
 
-pub(crate) fn to(
-    timezone: &'static str
-) -> Arg{
+pub(crate) fn to(timezone: &'static str) -> Arg {
     Arg::new("to_timezone")
     .short('t')
     .long("to")

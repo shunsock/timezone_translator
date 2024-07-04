@@ -13,9 +13,9 @@ use translator::translator::TimezoneTranslator;
 use validator::command_options_validator::validate_command_options;
 
 fn main() {
-    let matches: ArgMatches = receive_user_input();
+    let user_input_options: ArgMatches = receive_user_input();
 
-    let validator: ValidatedCommandOptions = match validate_command_options(&matches) {
+    let validated_options: ValidatedCommandOptions = match validate_command_options(&user_input_options) {
         Ok(v) => v,
         Err(e) => {
             eprintln!("{}", e);
@@ -24,10 +24,10 @@ fn main() {
     };
 
     let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
-        validator.time(),
-        validator.from_tz(),
-        validator.to_tz(),
-        validator.ambiguous_time_strategy(),
+        validated_options.time(),
+        validated_options.from_tz(),
+        validated_options.to_tz(),
+        validated_options.ambiguous_time_strategy(),
     )
     .convert();
 

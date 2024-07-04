@@ -1,7 +1,7 @@
+use clap::{Arg, Command};
 use super::local_timezone_string_provider::provide_local_timezone_string;
-use clap::{Arg, ArgMatches, Command};
 
-pub(crate) fn command_factory() -> ArgMatches {
+pub fn define_command() -> Command {
     let now: String = provide_local_timezone_string();
     let now_str: &'static str = Box::leak(now.into_boxed_str());
 
@@ -40,5 +40,4 @@ pub(crate) fn command_factory() -> ArgMatches {
             .default_value("earliest")
             .required(false)
         )
-        .get_matches()
 }

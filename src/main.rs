@@ -5,7 +5,7 @@ mod validator;
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use command::command_factory::command_factory;
+use command::receiver::receive_user_input;
 use std::process::exit;
 use translator::translation_error::TranslationError;
 use translator::translator::TimezoneTranslator;
@@ -13,7 +13,7 @@ use validator::command_options_validator::validate_command_options;
 use validator::validated_command_options::ValidatedCommandOptions;
 
 fn main() {
-    let matches: ArgMatches = command_factory();
+    let matches: ArgMatches = receive_user_input();
 
     let validator: ValidatedCommandOptions = match validate_command_options(&matches) {
         Ok(v) => v,

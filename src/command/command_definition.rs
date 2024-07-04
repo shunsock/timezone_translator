@@ -1,5 +1,5 @@
 use clap::{Arg, Command};
-use super::local_timezone_string_provider::provide_local_timezone_string;
+use super::helper::local_timezone_string_provider::provide_local_timezone_string;
 
 pub fn command_provider() -> Command {
     let now: String = provide_local_timezone_string();

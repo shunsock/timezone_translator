@@ -1,11 +1,11 @@
-mod factory;
+mod command;
 mod translator;
 mod validator;
 
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use factory::command_factory::command_factory;
+use command::command_factory::command_factory;
 use std::process::exit;
 use translator::translation_error::TranslationError;
 use translator::translator::TimezoneTranslator;

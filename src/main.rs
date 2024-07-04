@@ -5,7 +5,7 @@ mod validator;
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use command::options::validated_user_inputs::ValidatedCommandOptions;
+use command::validated_options::validated_user_inputs::ValidatedCommandOptions;
 use command::receiver::receive_user_input;
 use std::process::exit;
 use translator::translation_error::TranslationError;

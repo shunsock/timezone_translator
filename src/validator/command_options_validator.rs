@@ -1,6 +1,6 @@
 use super::native_datetime_validator::validate_string_for_native_datetime;
 use super::timezone_validator::validate_string_for_timezone;
-use crate::command::options::validated_user_inputs::ValidatedCommandOptions;
+use crate::command::validated_options::validated_user_inputs::ValidatedCommandOptions;
 use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use crate::validator::ambiguous_time_strategy_validator::validate_string_for_ambiguous_time_strategy;
 use crate::validator::validation_error::ValidationError;
@@ -33,7 +33,7 @@ pub(crate) fn validate_command_options(
     let ambiguous_time_strategy_validated: AmbiguousTimeStrategy =
         validate_string_for_ambiguous_time_strategy(&ambiguous_time_strategy_str)?;
 
-    // Return validated options
+    // Return validated validated_options
     Ok(ValidatedCommandOptions::new(
         time_validated,
         from_tz_validated,
@@ -60,7 +60,7 @@ mod tests {
             .get_matches_from(vec!["test", time, from_tz, to_tz])
     }
 
-    /// Test that valid command options are valid
+    /// Test that valid command validated_options are valid
     /// expected: `Ok(ValidatedCommandOptions)`
     #[test]
     fn test_validate_command_options_valid() {
@@ -72,7 +72,7 @@ mod tests {
             validate_command_options(&matches);
         assert!(result.is_ok());
 
-        // Confirm that the validated options are as expected
+        // Confirm that the validated validated_options are as expected
         let validated_options: ValidatedCommandOptions = result.unwrap();
         assert_eq!(
             validated_options.time(),

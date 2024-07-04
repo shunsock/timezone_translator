@@ -30,17 +30,24 @@
 The timezone_converter binary takes two arguments: the time to convert and the target timezone.
 
 ```bash
-tzt --help
+$tzt --help
 Converts time between time zones
 
-Usage: tzt --time <TIME> --from <FROM_TIMEZONE> --to <TO_TIMEZONE>
+Usage: tzt [OPTIONS] --time <TIME>
 
 Options:
-  -T, --time <TIME>           Time in the format YYYY-MM-DD HH:MM:SS (you can omit HH:MM:SS) or YYYY-MM-DDTHH:MM:SS
-  -f, --from <FROM_TIMEZONE>  The original timezone (e.g. America/New_York) @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html
-  -t, --to <TO_TIMEZONE>      The target timezone (e.g. Asia/Tokyo) @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html#
-  -h, --help                  Print help
-  -V, --version               Print version
+  -T, --time <TIME>
+          Time in the format YYYY-MM-DD HH:MM:SS (you can omit HH:MM:SS) or YYYY-MM-DDTHH:MM:SS
+  -f, --from <FROM_TIMEZONE>
+          The original timezone (e.g. America/New_York) @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html [default: Your_Local_Timezone]
+  -t, --to <TO_TIMEZONE>
+          The target timezone (e.g. Asia/Tokyo) @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html# [default: Your_Local_Timezone]
+  -a, --ambiguous-time-strategy <STRATEGY>
+          Strategy to use for ambiguous times (earliest, latest) [default: earliest]
+  -h, --help
+          Print help
+  -V, --version
+          Print version
 ```
 
 ## Dependencies
@@ -59,8 +66,8 @@ This project uses a Makefile for managing build and installation tasks. Here are
 To install the binary, you can use the following command.
 
 ```bash
-sudo curl -L -o /usr/local/bin/timezone_translator https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
-  sudo chmod +x /usr/local/bin/timezone_translator
+sudo curl -L -o /usr/local/bin/tzt https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
+  sudo chmod +x /usr/local/bin/tzt
 ```
 
 ### Install (from source)

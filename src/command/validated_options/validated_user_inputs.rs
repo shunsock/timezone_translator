@@ -10,7 +10,7 @@ pub(crate) struct ValidatedCommandOptions {
 }
 
 impl ValidatedCommandOptions {
-    pub fn new(
+    pub(crate) fn new(
         time: NaiveDateTime,
         from_tz: Tz,
         to_tz: Tz,

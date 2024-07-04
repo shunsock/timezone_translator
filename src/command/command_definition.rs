@@ -16,7 +16,7 @@ use clap::Command;
 /// use command::command_definition::command_provider;
 /// let user_input: ArgMatches = command_provider().get_matches();
 /// ```
-pub fn command_provider() -> Command {
+pub(crate) fn command_provider() -> Command {
     let now: String = provide_local_timezone_string();
     let now_str: &'static str = Box::leak(now.into_boxed_str());
 

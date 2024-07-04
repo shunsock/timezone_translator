@@ -1,21 +1,21 @@
-mod factory;
+mod command;
 mod translator;
 mod validator;
 
 use chrono::prelude::*;
 use chrono_tz::Tz;
 use clap::ArgMatches;
-use factory::command_factory::command_factory;
+use command::receiver::receive_user_input;
+use command::validated_options::validated_user_inputs::ValidatedCommandOptions;
 use std::process::exit;
 use translator::translation_error::TranslationError;
 use translator::translator::TimezoneTranslator;
 use validator::command_options_validator::validate_command_options;
-use validator::validated_command_options::ValidatedCommandOptions;
 
 fn main() {
-    let matches: ArgMatches = command_factory();
+    let user_input_options: ArgMatches = receive_user_input();
 
-    let validator: ValidatedCommandOptions = match validate_command_options(&matches) {
+    let validated_options: ValidatedCommandOptions = match validate_command_options(&user_input_options) {
         Ok(v) => v,
         Err(e) => {
             eprintln!("{}", e);
@@ -24,10 +24,10 @@ fn main() {
     };
 
     let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
-        validator.time(),
-        validator.from_tz(),
-        validator.to_tz(),
-        validator.ambiguous_time_strategy(),
+        validated_options.time(),
+        validated_options.from_tz(),
+        validated_options.to_tz(),
+        validated_options.ambiguous_time_strategy(),
     )
     .convert();
 

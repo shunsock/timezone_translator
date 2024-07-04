@@ -20,7 +20,7 @@ use chrono_tz::TZ_VARIANTS;
 ///
 /// - [Chrono crate documentation](https://docs.rs/chrono)
 /// - [Chrono-tz crate documentation](https://docs.rs/chrono-tz)
-pub(super) fn provide_local_timezone_string() -> String {
+pub(crate) fn provide_local_timezone_string() -> String {
     let local_datetime_now: DateTime<Local> = Local::now();
 
     for tz in TZ_VARIANTS {

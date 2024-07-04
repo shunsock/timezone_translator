@@ -1,4 +1,4 @@
-use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
+use crate::command::validated_options::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use chrono::NaiveDateTime;
 use chrono_tz::Tz;
 
@@ -10,7 +10,7 @@ pub(crate) struct ValidatedCommandOptions {
 }
 
 impl ValidatedCommandOptions {
-    pub fn new(
+    pub(crate) fn new(
         time: NaiveDateTime,
         from_tz: Tz,
         to_tz: Tz,

@@ -1,4 +1,4 @@
-use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
+use crate::command::validated_options::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use crate::validator::validation_error::ValidationError;
 
 pub(super) fn validate_string_for_ambiguous_time_strategy(

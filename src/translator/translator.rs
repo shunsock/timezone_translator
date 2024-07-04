@@ -1,5 +1,5 @@
 use super::translation_error::TranslationError;
-use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
+use crate::command::validated_options::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use chrono::{DateTime, LocalResult, MappedLocalTime, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
 

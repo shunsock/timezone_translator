@@ -1,1 +1,1 @@
-pub(crate) mod validated_command_options;
+pub(crate) mod validated_user_inputs;

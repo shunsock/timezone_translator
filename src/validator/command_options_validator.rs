@@ -1,6 +1,6 @@
 use super::native_datetime_validator::validate_string_for_native_datetime;
 use super::timezone_validator::validate_string_for_timezone;
-use crate::command::options::validated_command_options::ValidatedCommandOptions;
+use crate::command::options::validated_user_inputs::ValidatedCommandOptions;
 use crate::validator::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use crate::validator::ambiguous_time_strategy_validator::validate_string_for_ambiguous_time_strategy;
 use crate::validator::validation_error::ValidationError;

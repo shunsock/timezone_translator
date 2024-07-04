@@ -1,6 +1,10 @@
+use super::local_timezone_string_provider::provide_local_timezone_string;
 use clap::{Arg, ArgMatches, Command};
 
 pub(crate) fn command_factory() -> ArgMatches {
+    let now: String = provide_local_timezone_string();
+    let now_str: &'static str = Box::leak(now.into_boxed_str());
+
     Command::new("timezone_translator")
         .version("1.0")
         .author("Your Name s.tsuchiya.business@gmail.com")
@@ -17,14 +21,16 @@ pub(crate) fn command_factory() -> ArgMatches {
             .long("from")
             .value_name("FROM_TIMEZONE")
             .help("The original timezone (e.g. America/New_York) @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html")
-            .required(true)
+            .required(false)
+            .default_value(now_str)
         )
         .arg(Arg::new("to_timezone")
             .short('t')
             .long("to")
             .value_name("TO_TIMEZONE")
             .help("The target timezone (e.g. Asia/Tokyo) @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html#")
-            .required(true)
+            .required(false)
+            .default_value(now_str)
         )
         .arg(Arg::new("ambiguous_time_strategy")
             .short('a')

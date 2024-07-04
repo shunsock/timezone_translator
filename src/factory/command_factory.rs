@@ -1,5 +1,5 @@
-use clap::{Arg, ArgMatches, Command};
 use super::local_timezone_string_provider::provide_local_timezone_string;
+use clap::{Arg, ArgMatches, Command};
 
 pub(crate) fn command_factory() -> ArgMatches {
     let now: String = provide_local_timezone_string();

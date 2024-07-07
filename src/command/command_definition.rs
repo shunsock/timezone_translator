@@ -21,7 +21,7 @@ pub(crate) fn command_provider() -> Command {
     let now_str: &'static str = Box::leak(now.into_boxed_str());
 
     Command::new("tzt - Timezone Translator")
-        .version("0.1")
+        .version("0.2.0")
         .author("s.tsuchiya.business@gmail.com")
         .about("Converts time between time zones")
         .arg(time())

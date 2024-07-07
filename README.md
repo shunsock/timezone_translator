@@ -57,16 +57,13 @@ This project requires the following dependencies:
 - `Make`: A build automation tool that simplifies the build process.
 
 ## Getting Started
-This project uses a Makefile for managing build and installation tasks. Here are some quick steps to get started:
-
-1. Clone the repository to your local machine.
-2. Navigate to the project root directory where the Makefile is located.
-
 ### Install
 To install the binary, you can use the following command.
 
 ```bash
-sudo curl -L -o /usr/local/bin/tzt https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
+sudo curl -L -o \
+	/usr/local/bin/tzt \
+	https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
   sudo chmod +x /usr/local/bin/tzt
 ```
 
@@ -75,6 +72,8 @@ You can also build and install the binary from source.
 To build and install the project, you can use the `install` target in the Makefile.
 
 ```bash
+git clone https://github.com/shunsock/timezone_translator.git
+cd timezone_translator
 make install
 ```
 
@@ -92,3 +91,44 @@ To remove the installed binary, use the `uninstall` command:
 ```bash
 make uninstall
 ```
+
+## Ambiguous Time Strategy
+There are two strategies for ambiguous times: `earliest` and `latest` to handle ambiguous times.
+
+Ambiguous times occur when the clocks are set back for daylight saving time (DST). When DST starts, the clock forwards by one hour, and when DST ends, the clock moves back by one hour. This means that there is one hour that occurs twice in the fall when the clock moves back. The `earliest` strategy uses the first occurrence of the time, and the `latest` strategy uses the second occurrence of the time.
+
+tzt use earliest strategy for ambiguous times by default. 
+```bash
+$ tzt --time '2024-11-03 01:30:00' --from 'America/New_York' --to 'UTC'
+2024-11-03 05:30:00 UTC
+```
+
+If you want to use latest strategy, you can use `ambiguous-time-strategy` (`-a`) option.
+```bash
+$ tzt --time '2024-11-03 01:30:00' --from 'America/New_York' --to 'UTC' --ambiguous-time-strategy 'latest'
+2024-11-03 06:30:00 UTC
+```
+
+## Error Handling
+tzt output Validation Error when `tzt validator` finds invalid value.
+
+this is an example of an invalid time format. you can see all valid time formats by using `tzt --help`.
+```bash
+$ tzt --time '2024-01-' --from 'America/New_York' --to 'UTC'
+Invalid time format found: 2024-01- (expected: YYYY-MM-DD hh:mm:ss)
+```
+
+this is an example of an invalid timezone. you can check all valid inputs by looking `https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html` because, tzt uses `chrono-tz` library internally.
+```bash
+$ tzt --time '2024-03-10 02:30:00' --from 'America/New_York' --to 'NOT EXIST'
+Invalid timezone found: NOT EXIST. @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html
+```
+
+`tzt translator` can handle the case where the output time and timezone do not exist.
+```bash
+$ tzt --time '2024-03-10 02:30:00' --from 'America/New_York' --to 'America/Los_Angeles'
+Translation Error: Output time and timezone does not exist. Please check DST rules.
+```
+
+## LICENSE
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.

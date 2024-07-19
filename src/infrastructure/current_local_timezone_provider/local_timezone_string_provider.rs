@@ -18,19 +18,19 @@ use super::get_system_timezone_from_etc_timezone::get_system_timezone_from_etc_t
 pub(crate) fn provide_local_timezone_string() -> String {
     // read environment variable TZ
     let env_var_tz: Option<String> = EnvironmentVariableTzProvider::new(None).get_env_var_tz();
-    if env_var_tz != None {
+    if env_var_tz.is_some() {
         return env_var_tz.unwrap();
     }
 
     // read /etc/localtime
     let tz_from_etc_localtime: Option<String> = get_system_timezone_from_etc_localtime();
-    if tz_from_etc_localtime != None {
+    if tz_from_etc_localtime.is_some() {
         return tz_from_etc_localtime.unwrap();
     }
 
     // read /etc/timezone
     let tz_from_etc_timezone: Option<String> = get_system_timezone_from_etc_timezone();
-    if tz_from_etc_timezone != None {
+    if tz_from_etc_timezone.is_some() {
         return tz_from_etc_timezone.unwrap();
     }
 

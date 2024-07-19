@@ -37,6 +37,6 @@ impl ValidatedCommandOptions {
     }
 
     pub(crate) fn ambiguous_time_strategy(&self) -> AmbiguousTimeStrategy {
-        self.ambiguous_time_strategy.clone()
+        self.ambiguous_time_strategy
     }
 }

@@ -7,7 +7,7 @@ pub(super) fn validate_string_for_ambiguous_time_strategy(
     match ambiguous_time_strategy_str {
         "earliest" => Ok(AmbiguousTimeStrategy::Earliest),
         "latest" => Ok(AmbiguousTimeStrategy::Latest),
-        _ => Err(ValidationError::InvalidAmbiguousTimeStrategy {
+        _ => Err(ValidationError::AmbiguousTimeStrategy {
             ambiguous_time_strategy: ambiguous_time_strategy_str.to_string(),
         }),
     }
@@ -46,7 +46,7 @@ mod tests {
         // confirm error type
         assert_eq!(
             res.unwrap_err(),
-            ValidationError::InvalidAmbiguousTimeStrategy {
+            ValidationError::AmbiguousTimeStrategy {
                 ambiguous_time_strategy: "invalid".to_string()
             }
         );

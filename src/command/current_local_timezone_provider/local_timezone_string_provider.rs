@@ -1,8 +1,7 @@
-use std::{env, fs};
+use std::fs;
 use chrono::{DateTime, Local, Offset, TimeZone};
-use std::time::{SystemTime, UNIX_EPOCH};
 use chrono_tz::Tz;
-use chrono_tz::TZ_VARIANTS;
+use super::get_env_var_tz::EnvironmentVariableTzProvider;
 
 /// Returns the name of the local timezone as a `String`.
 ///
@@ -27,20 +26,24 @@ pub(crate) fn provide_local_timezone_string() -> String {
     let now: DateTime<Local> = Local::now();
 
     // 環境変数からタイムゾーンを取得
-    let timezone = env::var("TZ").unwrap_or_else(|_| {
-        // 環境変数TZが設定されていない場合、/etc/localtimeをチェックする
-        match fs::read_link("/etc/localtime") {
-            Ok(path) => {
-                let path_str = path.to_string_lossy();
-                if let Some(pos) = path_str.find("/zoneinfo/") {
-                    path_str[pos + "/zoneinfo/".len()..].to_string()
-                } else {
-                    "Unknown".to_string()
-                }
-            },
-            Err(_) => "Unknown".to_string(),
-        }
-    });
+    let env_var_tz: Option<String> = EnvironmentVariableTzProvider::new(None).get_env_var_tz();
+    if env_var_tz != None {
+        return env_var_tz.unwrap()
+    }
+
+    // 環境変数TZが設定されていない場合、/etc/localtimeをチェックする
+    let timezone = match fs::read_link("/etc/localtime") {
+        Ok(path) => {
+            let path_str = path.to_string_lossy();
+            if let Some(pos) = path_str.find("/zoneinfo/") {
+                path_str[pos + "/zoneinfo/".len()..].to_string()
+            } else {
+                "Unknown".to_string()
+            }
+        },
+        Err(_) => "Unknown".to_string(),
+    };
+
 
     println!("Current local time: {}", now);
     println!("System timezone: {}", timezone);

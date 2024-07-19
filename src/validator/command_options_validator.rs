@@ -14,24 +14,24 @@ pub(crate) fn validate_command_options(
     // arg.get_one::<String>("time") returns Option<&String>, but clap validates the required option
     // thus, we can safely unwrap the value
     let time_str: &String = arg.get_one::<String>("time").unwrap();
-    let time_validated: NaiveDateTime = validate_string_for_native_datetime(&time_str)?;
+    let time_validated: NaiveDateTime = validate_string_for_native_datetime(time_str)?;
 
     // arg.get_one::<String>("from_timezone") returns Option<&String>, but clap validates the required option
     // thus, we can safely unwrap the value
     let from_tz_str: &String = arg.get_one::<String>("from_timezone").unwrap();
-    let from_tz_validated: Tz = validate_string_for_timezone(&from_tz_str)?;
+    let from_tz_validated: Tz = validate_string_for_timezone(from_tz_str)?;
 
     // arg.get_one::<String>("to_timezone") returns Option<&String>, but clap validates the required option
     // thus, we can safely unwrap the value
     let to_tz_str: &String = arg.get_one::<String>("to_timezone").unwrap();
-    let to_tz_validated: Tz = validate_string_for_timezone(&to_tz_str)?;
+    let to_tz_validated: Tz = validate_string_for_timezone(to_tz_str)?;
 
     // arg.get_one::<String>("ambiguous_time_strategy") returns Option<&String>, but clap set the default value
     // thus, we can safely unwrap the value
     let ambiguous_time_strategy_str: &String =
         arg.get_one::<String>("ambiguous_time_strategy").unwrap();
     let ambiguous_time_strategy_validated: AmbiguousTimeStrategy =
-        validate_string_for_ambiguous_time_strategy(&ambiguous_time_strategy_str)?;
+        validate_string_for_ambiguous_time_strategy(ambiguous_time_strategy_str)?;
 
     // Return validated validated_options
     Ok(ValidatedCommandOptions::new(

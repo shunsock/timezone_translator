@@ -15,13 +15,14 @@ use validator::command_options_validator::validate_command_options;
 fn main() {
     let user_input_options: ArgMatches = receive_user_input();
 
-    let validated_options: ValidatedCommandOptions = match validate_command_options(&user_input_options) {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("{}", e);
-            exit(1);
-        }
-    };
+    let validated_options: ValidatedCommandOptions =
+        match validate_command_options(&user_input_options) {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("{}", e);
+                exit(1);
+            }
+        };
 
     let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
         validated_options.time(),

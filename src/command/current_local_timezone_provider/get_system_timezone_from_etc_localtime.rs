@@ -9,7 +9,7 @@ pub(super) fn get_system_timezone_from_etc_localtime() -> Option<String> {
             } else {
                 None
             }
-        },
-        Err(_) => None
+        }
+        Err(_) => None,
     };
 }

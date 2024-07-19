@@ -8,13 +8,11 @@ pub(super) struct EnvironmentVariableTzProvider {
 impl EnvironmentVariableTzProvider {
     pub(super) fn new(env_var_name: Option<String>) -> Self {
         return match env_var_name {
-            Some(env_name) => {
-                EnvironmentVariableTzProvider { env_name }
-            }
-            None => {
-                EnvironmentVariableTzProvider { env_name: "TZ".to_string() }
-            }
-        }
+            Some(env_name) => EnvironmentVariableTzProvider { env_name },
+            None => EnvironmentVariableTzProvider {
+                env_name: "TZ".to_string(),
+            },
+        };
     }
 }
 
@@ -44,7 +42,10 @@ mod tests {
     fn test_get_env_var_tz() {
         set_tmp_env_var();
         let tz_provider = EnvironmentVariableTzProvider::new(Some("TEST_TZ".to_string()));
-        assert_eq!(tz_provider.get_env_var_tz(), Some("America/New_York".to_string()));
+        assert_eq!(
+            tz_provider.get_env_var_tz(),
+            Some("America/New_York".to_string())
+        );
         remove_tmp_env_var();
     }
 }

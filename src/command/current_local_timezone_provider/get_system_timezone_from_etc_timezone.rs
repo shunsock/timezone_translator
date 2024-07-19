@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::Read;
 
-
 /// Returns the system timezone from the `/etc/timezone` file contents as a `String`.
 ///
 pub(super) fn get_system_timezone_from_etc_timezone() -> Option<String> {

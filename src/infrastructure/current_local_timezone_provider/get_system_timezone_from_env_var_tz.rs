@@ -7,12 +7,12 @@ pub(crate) struct EnvironmentVariableTzProvider {
 
 impl EnvironmentVariableTzProvider {
     pub(crate) fn new(env_var_name: Option<String>) -> Self {
-        return match env_var_name {
+        match env_var_name {
             Some(env_name) => EnvironmentVariableTzProvider { env_name },
             None => EnvironmentVariableTzProvider {
                 env_name: "TZ".to_string(),
             },
-        };
+        }
     }
 }
 

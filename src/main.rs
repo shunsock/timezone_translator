@@ -10,7 +10,7 @@ use command::receiver::receive_user_input;
 use command::validated_options::validated_user_inputs::ValidatedCommandOptions;
 use std::process::exit;
 use translator::translation_error::TranslationError;
-use translator::translator::TimezoneTranslator;
+use translator::TimezoneTranslator;
 use validator::command_options_validator::validate_command_options;
 
 fn main() {
@@ -26,9 +26,9 @@ fn main() {
         };
 
     let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
-        validated_options.time(),
-        validated_options.from_tz(),
-        validated_options.to_tz(),
+        validated_options.get_param_time(),
+        validated_options.get_param_from_tz(),
+        validated_options.get_param_to_tz(),
         validated_options.ambiguous_time_strategy(),
     )
     .convert();

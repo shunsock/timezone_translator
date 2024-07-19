@@ -9,7 +9,7 @@ pub(super) fn validate_string_for_native_datetime(
 ) -> Result<NaiveDateTime, ValidationError> {
     if ymd_hms_matcher(time) {
         return NaiveDateTime::parse_from_str(time, "%Y-%m-%d %H:%M:%S")
-            .map_err(|_| ValidationError::InvalidTimeFormat(time.to_string()));
+            .map_err(|_| ValidationError::TimeFormat(time.to_string()));
     }
 
     if ymd_matcher(time) {
@@ -17,15 +17,15 @@ pub(super) fn validate_string_for_native_datetime(
             format!("{} 00:00:00", time).as_str(),
             "%Y-%m-%d %H:%M:%S",
         )
-        .map_err(|_| ValidationError::InvalidTimeFormat(time.to_string()));
+        .map_err(|_| ValidationError::TimeFormat(time.to_string()));
     }
 
     if ymd_t_hms_matcher(time) {
         return NaiveDateTime::parse_from_str(time, "%Y-%m-%dT%H:%M:%S")
-            .map_err(|_| ValidationError::InvalidTimeFormat(time.to_string()));
+            .map_err(|_| ValidationError::TimeFormat(time.to_string()));
     }
 
-    Err(ValidationError::InvalidTimeFormat(time.to_string()))
+    Err(ValidationError::TimeFormat(time.to_string()))
 }
 
 #[cfg(test)]

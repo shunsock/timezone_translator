@@ -18,20 +18,20 @@ use super::get_system_timezone_from_etc_timezone::get_system_timezone_from_etc_t
 pub(crate) fn provide_local_timezone_string() -> String {
     // read environment variable TZ
     let env_var_tz: Option<String> = EnvironmentVariableTzProvider::new(None).get_env_var_tz();
-    if env_var_tz != None {
-        return env_var_tz.unwrap();
+    if let Some(env_var_tz) = env_var_tz {
+        return env_var_tz;
     }
 
     // read /etc/localtime
     let tz_from_etc_localtime: Option<String> = get_system_timezone_from_etc_localtime();
-    if tz_from_etc_localtime != None {
-        return tz_from_etc_localtime.unwrap();
+    if let Some(tz_from_etc_localtime) = tz_from_etc_localtime {
+        return tz_from_etc_localtime;
     }
 
     // read /etc/timezone
     let tz_from_etc_timezone: Option<String> = get_system_timezone_from_etc_timezone();
-    if tz_from_etc_timezone != None {
-        return tz_from_etc_timezone.unwrap();
+    if let Some(tz_from_etc_timezone) = tz_from_etc_timezone {
+        return tz_from_etc_timezone;
     }
 
     let error_message = "System Timezone Not Found:

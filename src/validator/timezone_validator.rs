@@ -3,7 +3,7 @@ use chrono_tz::Tz;
 
 pub(super) fn validate_string_for_timezone(tz: &str) -> Result<Tz, ValidationError> {
     tz.parse::<Tz>()
-        .map_err(|_| ValidationError::InvalidTimezone(tz.to_string()))
+        .map_err(|_| ValidationError::Timezone(tz.to_string()))
 }
 
 #[cfg(test)]

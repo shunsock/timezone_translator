@@ -2,6 +2,7 @@ use std::fs;
 use chrono::{DateTime, Local, Offset, TimeZone};
 use chrono_tz::Tz;
 use super::get_env_var_tz::EnvironmentVariableTzProvider;
+use super::get_system_timezone_from_etc_localtime::get_system_timezone_from_etc_localtime;
 
 /// Returns the name of the local timezone as a `String`.
 ///
@@ -22,9 +23,6 @@ use super::get_env_var_tz::EnvironmentVariableTzProvider;
 /// - [Chrono crate documentation](https://docs.rs/chrono)
 /// - [Chrono-tz crate documentation](https://docs.rs/chrono-tz)
 pub(crate) fn provide_local_timezone_string() -> String {
- // 現在のシステム時間を取得
-    let now: DateTime<Local> = Local::now();
-
     // 環境変数からタイムゾーンを取得
     let env_var_tz: Option<String> = EnvironmentVariableTzProvider::new(None).get_env_var_tz();
     if env_var_tz != None {
@@ -32,27 +30,11 @@ pub(crate) fn provide_local_timezone_string() -> String {
     }
 
     // 環境変数TZが設定されていない場合、/etc/localtimeをチェックする
-    let timezone = match fs::read_link("/etc/localtime") {
-        Ok(path) => {
-            let path_str = path.to_string_lossy();
-            if let Some(pos) = path_str.find("/zoneinfo/") {
-                path_str[pos + "/zoneinfo/".len()..].to_string()
-            } else {
-                "Unknown".to_string()
-            }
-        },
-        Err(_) => "Unknown".to_string(),
-    };
+    let timezone: Option<String> = get_system_timezone_from_etc_localtime();
 
+    println!("System timezone: {}", timezone.clone().unwrap());
 
-    println!("Current local time: {}", now);
-    println!("System timezone: {}", timezone);
-
-    // check if we can cast the timezone string to Chrono::Tz
-    let tz: Tz = timezone.parse().expect("Could not parse timezone string");
-    println!("Parsed timezone: {:?}", tz);
-
-    timezone
+    timezone.unwrap()
 
     // システムのタイムゾーンを取得する
     // This should never happen because input timezone is

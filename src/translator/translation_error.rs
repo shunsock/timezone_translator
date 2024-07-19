@@ -1,6 +1,5 @@
 use chrono::NaiveDateTime;
 use chrono_tz::Tz;
-use thiserror;
 
 #[derive(thiserror::Error, Debug)]
 pub(crate) enum TranslationError {

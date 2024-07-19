@@ -1,5 +1,3 @@
-use thiserror;
-
 #[derive(thiserror::Error, Debug, PartialEq)]
 pub(crate) enum ValidationError {
     #[error("Invalid time format found: {0} (expected: YYYY-MM-DD hh:mm:ss)")]

@@ -1,12 +1,12 @@
 use std::env;
 use std::env::VarError;
 
-pub(super) struct EnvironmentVariableTzProvider {
+pub(crate) struct EnvironmentVariableTzProvider {
     env_name: String,
 }
 
 impl EnvironmentVariableTzProvider {
-    pub(super) fn new(env_var_name: Option<String>) -> Self {
+    pub(crate) fn new(env_var_name: Option<String>) -> Self {
         return match env_var_name {
             Some(env_name) => EnvironmentVariableTzProvider { env_name },
             None => EnvironmentVariableTzProvider {
@@ -17,7 +17,7 @@ impl EnvironmentVariableTzProvider {
 }
 
 impl EnvironmentVariableTzProvider {
-    pub(super) fn get_env_var_tz(&self) -> Option<String> {
+    pub(crate) fn get_env_var_tz(&self) -> Option<String> {
         let timezone: Result<String, VarError> = env::var(&self.env_name);
 
         match timezone {

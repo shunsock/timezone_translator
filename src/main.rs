@@ -1,4 +1,5 @@
 mod command;
+mod infrastructure;
 mod translator;
 mod validator;
 

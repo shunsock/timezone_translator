@@ -26,9 +26,9 @@ fn main() {
         };
 
     let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
-        validated_options.time(),
-        validated_options.from_tz(),
-        validated_options.to_tz(),
+        validated_options.get_param_time(),
+        validated_options.get_param_from_tz(),
+        validated_options.get_param_to_tz(),
         validated_options.ambiguous_time_strategy(),
     )
     .convert();

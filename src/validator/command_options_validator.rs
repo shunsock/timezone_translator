@@ -75,15 +75,15 @@ mod tests {
         // Confirm that the validated validated_options are as expected
         let validated_options: ValidatedCommandOptions = result.unwrap();
         assert_eq!(
-            validated_options.time(),
+            validated_options.get_param_time(),
             NaiveDateTime::parse_from_str("2024-06-27 12:34:56", "%Y-%m-%d %H:%M:%S").unwrap()
         );
         assert_eq!(
-            validated_options.from_tz(),
+            validated_options.get_param_from_tz(),
             "America/New_York".parse::<Tz>().unwrap()
         );
         assert_eq!(
-            validated_options.to_tz(),
+            validated_options.get_param_to_tz(),
             "Europe/London".parse::<Tz>().unwrap()
         );
     }

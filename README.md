@@ -27,7 +27,7 @@
   - https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html
 
 ## Usage
-The timezone_translator binary takes two arguments: the time to convert and the target timezone.
+You can use the following command to see the help message.
 
 ```bash
 $tzt --help

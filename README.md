@@ -27,11 +27,11 @@
   - https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html
 
 ## Usage
-The timezone_converter binary takes two arguments: the time to convert and the target timezone.
+You can use the following command to see the help message.
 
 ```bash
 $tzt --help
-Converts time between time zones
+translate time from one timezone to another
 
 Usage: tzt [OPTIONS] --time <TIME>
 

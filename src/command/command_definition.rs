@@ -22,8 +22,8 @@ pub(crate) fn command_provider() -> Command {
 
     Command::new("tzt - Timezone Translator")
         .version("0.2.0")
-        .author("s.tsuchiya.business@gmail.com")
-        .about("Converts time between time zones")
+        .author("shunsock")
+        .about("translate time from one timezone to another")
         .arg(time())
         .arg(from(now_str))
         .arg(to(now_str))

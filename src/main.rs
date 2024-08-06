@@ -54,7 +54,7 @@ mod tests {
     /// from one timezone (America/New_York) to another (UTC).
     #[test]
     fn converts_time_from_new_york_to_utc() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&[
             "-T",
             "2024-01-01 12:00:00",
@@ -70,7 +70,7 @@ mod tests {
 
     #[test]
     fn converts_time_with_no_timezone() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&["-T", "2024-01-01 12:00:00"]);
         cmd.assert()
             .success()
@@ -85,7 +85,7 @@ mod tests {
     /// but properly represents the standard time in the target timezone (JST in this case).
     #[test]
     fn converts_time_from_utc_to_tokyo() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&["-T", "2024-01-01 12:00:00", "-f", "UTC", "-t", "Asia/Tokyo"]);
         cmd.assert()
             .success()
@@ -104,7 +104,7 @@ mod tests {
     /// [Wikipedia article](https://en.wikipedia.org/wiki/ISO_8601).
     #[test]
     fn handles_iso_8601_format() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&[
             "-T",
             "2024-01-01T12:00:00",
@@ -130,7 +130,7 @@ mod tests {
     /// by selecting the earlier occurrence of "01:30:00".
     #[test]
     fn handles_ambiguous_time_with_earliest_strategy() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&[
             "--time",
             "2024-11-03 01:30:00",
@@ -157,7 +157,7 @@ mod tests {
     /// occurrence of "01:30:00".
     #[test]
     fn handles_ambiguous_time_with_latest_strategy() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&[
             "--time",
             "2024-11-03 01:30:00",
@@ -177,7 +177,7 @@ mod tests {
     /// and reports an error when an invalid "from" timezone is provided.
     #[test]
     fn fails_with_invalid_from_timezone() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&["-T", "2024-01-01 12:00:00", "-f", "NOT_EXIST", "-t", "UTC"]);
         cmd.assert()
             .failure()
@@ -188,7 +188,7 @@ mod tests {
     /// and reports an error when an invalid "to" timezone is provided.
     #[test]
     fn fails_with_invalid_to_timezone() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&["-T", "2024-01-01 12:00:00", "-f", "UTC", "-t", "NOT_EXIST"]);
         cmd.assert()
             .failure()
@@ -210,7 +210,7 @@ mod tests {
     /// provide a clear error message indicating the issue.
     #[test]
     fn fails_nonexistent_time_due_to_dst() {
-        let mut cmd = Command::cargo_bin("timezone_translator").unwrap();
+        let mut cmd = Command::cargo_bin("tzt").unwrap();
         cmd.args(&[
             "--time",
             "2024-03-10 02:30:00",

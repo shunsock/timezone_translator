@@ -4,8 +4,10 @@ version = "0.2.0"
 edition = "2021"
 
 [dependencies]
+assert_cmd = "2.0"
 chrono = "0.4"
 chrono-tz = "0.9"
 clap = "4.5"
+predicates = "3.0"
 regex = "1.10.6"
 thiserror = "1.0.63"

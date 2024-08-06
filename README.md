@@ -70,7 +70,7 @@ To install the binary, you can use the following command.
 ```bash
 sudo curl -L -o \
 	/usr/local/bin/tzt \
-	https://github.com/shunsock/timezone_translator/releases/download/v0.1.0/timezone_translator &&\
+	https://github.com/shunsock/timezone_translator/releases/download/v0.3.0/timezone_translator &&\
   sudo chmod +x /usr/local/bin/tzt
 ```
 

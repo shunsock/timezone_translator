@@ -57,7 +57,14 @@ This project requires the following dependencies:
 - `Make`: A build automation tool that simplifies the build process.
 
 ## Getting Started
-### Install
+### Install (cargo)
+You can install the binary with cargo.
+
+```bash
+cargo install tzt
+```
+
+### Install (binary)
 To install the binary, you can use the following command.
 
 ```bash
@@ -77,7 +84,6 @@ cd timezone_translator
 make install
 ```
 
-### Running the Command
 After installing the binary, you can run it from the command line:
 
 ```bash
@@ -86,7 +92,14 @@ $ tzt -T "2024-01-01 12:00:00" -f "America/New_York" -t "UTC"
 ```
 
 ### Uninstalling
-To remove the installed binary, use the `uninstall` command:
+You can uninstall the binary with cargo command.
+
+```bash
+cargo uninstall tzt
+```
+
+To remove the installed binary, use the `uninstall` command
+if you installed by curl or built from source.
 
 ```bash
 make uninstall

@@ -2,6 +2,14 @@
 name = "tzt"
 version = "0.2.0"
 edition = "2021"
+license = "MIT"
+description = "simple command-line utility that converts a given time from one timezone to another."
+homepage = "https://github.com/shunsock/timezone_translator"
+repository = "https://github.com/shunsock/timezone_translator"
+documentation = "https://github.com/shunsock/timezone_translator/blob/main/README.md"
+readme = "README.md"
+keywords = ["timezone", "time", "converter", "translator", "cli"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 assert_cmd = "2.0"

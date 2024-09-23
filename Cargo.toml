@@ -14,7 +14,7 @@ categories = ["command-line-utilities"]
 [dependencies]
 assert_cmd = "2.0"
 chrono = "0.4"
-chrono-tz = "0.9"
+chrono-tz = "0.10"
 clap = "4.5"
 predicates = "3.0"
 regex = "1.10.6"

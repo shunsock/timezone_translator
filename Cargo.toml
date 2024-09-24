@@ -1,6 +1,6 @@
 [package]
 name = "tzt"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 license = "MIT"
 description = "simple command-line utility that converts a given time from one timezone to another."

@@ -12,7 +12,7 @@ keywords = ["timezone", "time", "converter", "translator", "cli"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-assert_cmd = "2.0"
+assert_cmd = "2.1"
 chrono = "0.4"
 chrono-tz = "0.10"
 clap = "4.5"

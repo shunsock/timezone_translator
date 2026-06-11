@@ -51,16 +51,15 @@ Options:
 ```
 
 ## Architecture
-This project is a Cargo workspace following clean architecture.
-Each crate has its own README describing its background, purpose, and examples.
+This project is a single crate organized into clean architecture layers.
+Each layer module has its own README describing its background, purpose, and examples.
 
-| Crate | Role | README |
-|-------|------|--------|
-| `domain` | Value objects that make invalid inputs unrepresentable | [crates/domain](crates/domain/README.md) |
-| `usecase` | The timezone translation operation itself (DST handling) | [crates/usecase](crates/usecase/README.md) |
-| `infrastructure` | Detects the local timezone from the running system | [crates/infrastructure](crates/infrastructure/README.md) |
-| `presentation` | CLI definition, input parsing, and output | [crates/presentation](crates/presentation/README.md) |
-| `tzt` (root) | Thin binary that calls `presentation::run()` | this file |
+| Module | Role | README |
+|--------|------|--------|
+| `domain` | Value objects that make invalid inputs unrepresentable | [src/domain](src/domain/README.md) |
+| `usecase` | The timezone translation operation itself (DST handling) | [src/usecase](src/usecase/README.md) |
+| `infrastructure` | Detects the local timezone from the running system | [src/infrastructure](src/infrastructure/README.md) |
+| `presentation` | CLI definition, input parsing, and output | [src/presentation](src/presentation/README.md) |
 
 Dependencies flow one way: `presentation -> usecase -> domain`, with
 `infrastructure` used only by `presentation` for default values.

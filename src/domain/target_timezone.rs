@@ -1,4 +1,4 @@
-use crate::timezone_parse_error::TimezoneParseError;
+use crate::domain::timezone_parse_error::TimezoneParseError;
 use chrono_tz::Tz;
 use std::str::FromStr;
 

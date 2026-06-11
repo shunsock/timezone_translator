@@ -1,18 +1,17 @@
-[workspace]
-members = [
-    "crates/domain",
-    "crates/usecase",
-    "crates/infrastructure",
-    "crates/presentation",
-]
-
-[workspace.package]
+[package]
+name = "tzt"
 version = "0.3.1"
 edition = "2021"
 license = "MIT"
+description = "simple command-line utility that converts a given time from one timezone to another."
+homepage = "https://github.com/shunsock/timezone_translator"
 repository = "https://github.com/shunsock/timezone_translator"
+documentation = "https://github.com/shunsock/timezone_translator/blob/main/README.md"
+readme = "README.md"
+keywords = ["timezone", "time", "converter", "translator", "cli"]
+categories = ["command-line-utilities"]
 
-[workspace.dependencies]
+[dependencies]
 chrono = "0.4"
 chrono-tz = "0.10"
 # feature "string": lets Arg::default_value take an owned String, so the
@@ -20,26 +19,6 @@ chrono-tz = "0.10"
 clap = { version = "4.5", features = ["string"] }
 regex = "1.12.2"
 thiserror = "2.0.18"
-domain = { path = "crates/domain" }
-usecase = { path = "crates/usecase" }
-infrastructure = { path = "crates/infrastructure" }
-presentation = { path = "crates/presentation" }
-
-[package]
-name = "tzt"
-version.workspace = true
-edition.workspace = true
-license.workspace = true
-description = "simple command-line utility that converts a given time from one timezone to another."
-homepage = "https://github.com/shunsock/timezone_translator"
-repository.workspace = true
-documentation = "https://github.com/shunsock/timezone_translator/blob/main/README.md"
-readme = "README.md"
-keywords = ["timezone", "time", "converter", "translator", "cli"]
-categories = ["command-line-utilities"]
-
-[dependencies]
-presentation.workspace = true
 
 [dev-dependencies]
 assert_cmd = "2.1"

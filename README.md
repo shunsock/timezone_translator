@@ -50,6 +50,21 @@ Options:
           Print version
 ```
 
+## Architecture
+This project is a Cargo workspace following clean architecture.
+Each crate has its own README describing its background, purpose, and examples.
+
+| Crate | Role | README |
+|-------|------|--------|
+| `domain` | Value objects that make invalid inputs unrepresentable | [crates/domain](crates/domain/README.md) |
+| `usecase` | The timezone translation operation itself (DST handling) | [crates/usecase](crates/usecase/README.md) |
+| `infrastructure` | Detects the local timezone from the running system | [crates/infrastructure](crates/infrastructure/README.md) |
+| `presentation` | CLI definition, input parsing, and output | [crates/presentation](crates/presentation/README.md) |
+| `tzt` (root) | Thin binary that calls `presentation::run()` | this file |
+
+Dependencies flow one way: `presentation -> usecase -> domain`, with
+`infrastructure` used only by `presentation` for default values.
+
 ## Dependencies
 This project requires the following dependencies:
 

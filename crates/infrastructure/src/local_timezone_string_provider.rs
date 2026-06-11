@@ -46,9 +46,15 @@ mod tests {
     use regex::Regex;
 
     #[test]
-    fn test_check_output_match_timezone() {
-        let local_timezone_str = provide_local_timezone_string();
-        let re: Regex = Regex::new(r"^[a-zA-Z_/]+$").unwrap();
-        assert!(re.is_match(&local_timezone_str));
+    fn provides_an_iana_like_timezone_name_from_the_real_system() {
+        // Arrange
+        // no setup: this test reads the real TZ variable or /etc files
+        let iana_name_pattern: Regex = Regex::new(r"^[a-zA-Z_/]+$").unwrap();
+
+        // Act
+        let local_timezone = provide_local_timezone_string();
+
+        // Assert
+        assert!(iana_name_pattern.is_match(&local_timezone));
     }
 }

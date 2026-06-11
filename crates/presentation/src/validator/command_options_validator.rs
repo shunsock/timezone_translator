@@ -1,57 +1,34 @@
-use super::native_datetime_validator::validate_string_for_native_datetime;
-use super::timezone_validator::validate_string_for_timezone;
-use crate::command::validated_options::validated_user_inputs::ValidatedCommandOptions;
-use crate::validator::ambiguous_time_strategy_validator::validate_string_for_ambiguous_time_strategy;
-use crate::validator::validation_error::ValidationError;
-use chrono::NaiveDateTime;
-use chrono_tz::Tz;
+use super::validation_error::ValidationError;
 use clap::ArgMatches;
-use domain::AmbiguousTimeStrategy;
+use domain::{
+    AmbiguousTimeStrategy, ConversionTime, SourceTimezone, TargetTimezone, TranslationRequest,
+};
 
+/// Parses raw CLI strings into a validated `TranslationRequest`.
+///
+/// The `unwrap()` calls are safe: clap guarantees `time` (required)
+/// and the other options (defaulted) are always present.
 pub(crate) fn validate_command_options(
     arg: &ArgMatches,
-) -> Result<ValidatedCommandOptions, ValidationError> {
-    // arg.get_one::<String>("time") returns Option<&String>, but clap validates the required option
-    // thus, we can safely unwrap the value
-    let time_str: &String = arg.get_one::<String>("time").unwrap();
-    let time_validated: NaiveDateTime = validate_string_for_native_datetime(time_str)?;
+) -> Result<TranslationRequest, ValidationError> {
+    let time: ConversionTime = arg.get_one::<String>("time").unwrap().parse()?;
+    let source: SourceTimezone = arg.get_one::<String>("from_timezone").unwrap().parse()?;
+    let target: TargetTimezone = arg.get_one::<String>("to_timezone").unwrap().parse()?;
+    let strategy: AmbiguousTimeStrategy = arg
+        .get_one::<String>("ambiguous_time_strategy")
+        .unwrap()
+        .parse()?;
 
-    // arg.get_one::<String>("from_timezone") returns Option<&String>, but clap validates the required option
-    // thus, we can safely unwrap the value
-    let from_tz_str: &String = arg.get_one::<String>("from_timezone").unwrap();
-    let from_tz_validated: Tz = validate_string_for_timezone(from_tz_str)?;
-
-    // arg.get_one::<String>("to_timezone") returns Option<&String>, but clap validates the required option
-    // thus, we can safely unwrap the value
-    let to_tz_str: &String = arg.get_one::<String>("to_timezone").unwrap();
-    let to_tz_validated: Tz = validate_string_for_timezone(to_tz_str)?;
-
-    // arg.get_one::<String>("ambiguous_time_strategy") returns Option<&String>, but clap set the default value
-    // thus, we can safely unwrap the value
-    let ambiguous_time_strategy_str: &String =
-        arg.get_one::<String>("ambiguous_time_strategy").unwrap();
-    let ambiguous_time_strategy_validated: AmbiguousTimeStrategy =
-        validate_string_for_ambiguous_time_strategy(ambiguous_time_strategy_str)?;
-
-    // Return validated validated_options
-    Ok(ValidatedCommandOptions::new(
-        time_validated,
-        from_tz_validated,
-        to_tz_validated,
-        ambiguous_time_strategy_validated,
-    ))
+    Ok(TranslationRequest::new(time, source, target, strategy))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::validator::validation_error::ValidationError;
-    use chrono::NaiveDateTime;
-    use chrono_tz::Tz;
-    use clap::{Arg, ArgMatches, Command};
+    use clap::{Arg, Command};
 
-    // Helper function to create ArgMatches for testing
-    fn create_arg_matches(time: &str, from_tz: &str, to_tz: &str) -> ArgMatches {
+    /// Fixture: builds `ArgMatches` the same shape as the real CLI.
+    fn arg_matches(time: &str, from_tz: &str, to_tz: &str) -> ArgMatches {
         Command::new("test")
             .arg(Arg::new("time").required(true))
             .arg(Arg::new("from_timezone").required(true))
@@ -60,67 +37,61 @@ mod tests {
             .get_matches_from(vec!["test", time, from_tz, to_tz])
     }
 
-    /// Test that valid command validated_options are valid
-    /// expected: `Ok(ValidatedCommandOptions)`
     #[test]
-    fn test_validate_command_options_valid() {
-        let matches: ArgMatches =
-            create_arg_matches("2024-06-27 12:34:56", "America/New_York", "Europe/London");
+    fn builds_translation_request_from_valid_options() {
+        // Arrange
+        let matches = arg_matches("2024-06-27 12:34:56", "America/New_York", "Europe/London");
 
-        // Confirm that the validation passes
-        let result: Result<ValidatedCommandOptions, ValidationError> =
-            validate_command_options(&matches);
-        assert!(result.is_ok());
+        // Act
+        let request = validate_command_options(&matches).unwrap();
 
-        // Confirm that the validated validated_options are as expected
-        let validated_options: ValidatedCommandOptions = result.unwrap();
-        assert_eq!(
-            validated_options.get_param_time(),
-            NaiveDateTime::parse_from_str("2024-06-27 12:34:56", "%Y-%m-%d %H:%M:%S").unwrap()
+        // Assert
+        let expected = TranslationRequest::new(
+            "2024-06-27 12:34:56".parse().unwrap(),
+            "America/New_York".parse().unwrap(),
+            "Europe/London".parse().unwrap(),
+            AmbiguousTimeStrategy::Earliest,
         );
-        assert_eq!(
-            validated_options.get_param_from_tz(),
-            "America/New_York".parse::<Tz>().unwrap()
-        );
-        assert_eq!(
-            validated_options.get_param_to_tz(),
-            "Europe/London".parse::<Tz>().unwrap()
-        );
+        assert_eq!(request, expected);
     }
 
-    /// Test that an invalid time is invalid
-    /// expected: `Err(ValidationError::InvalidTime)`
     #[test]
-    fn test_validate_command_options_invalid_time() {
-        let matches: ArgMatches =
-            create_arg_matches("invalid-time", "America/New_York", "Europe/London");
-        let result: Result<ValidatedCommandOptions, ValidationError> =
-            validate_command_options(&matches);
-        assert!(result.is_err());
+    fn rejects_invalid_time() {
+        // Arrange
+        let matches = arg_matches("invalid-time", "America/New_York", "Europe/London");
+
+        // Act
+        let result = validate_command_options(&matches);
+
+        // Assert
+        assert!(matches!(result, Err(ValidationError::Time(_))));
     }
 
-    /// Test that an invalid from timezone is invalid
-    /// expected: `Err(ValidationError::InvalidTimezone)`
     #[test]
-    fn test_validate_command_options_invalid_from_timezone() {
-        let matches: ArgMatches =
-            create_arg_matches("2024-06-27 12:34:56", "Invalid/Timezone", "Europe/London");
-        let result: Result<ValidatedCommandOptions, ValidationError> =
-            validate_command_options(&matches);
-        assert!(result.is_err());
+    fn rejects_invalid_source_timezone() {
+        // Arrange
+        let matches = arg_matches("2024-06-27 12:34:56", "Invalid/Timezone", "Europe/London");
+
+        // Act
+        let result = validate_command_options(&matches);
+
+        // Assert
+        assert!(matches!(result, Err(ValidationError::Timezone(_))));
     }
 
-    /// Test that an invalid to timezone is invalid
-    /// expected: `Err(ValidationError::InvalidTimezone)`
     #[test]
-    fn test_validate_command_options_invalid_to_timezone() {
-        let matches: ArgMatches = create_arg_matches(
+    fn rejects_invalid_target_timezone() {
+        // Arrange
+        let matches = arg_matches(
             "2024-06-27 12:34:56",
             "America/New_York",
             "Invalid/Timezone",
         );
-        let result: Result<ValidatedCommandOptions, ValidationError> =
-            validate_command_options(&matches);
-        assert!(result.is_err());
+
+        // Act
+        let result = validate_command_options(&matches);
+
+        // Assert
+        assert!(matches!(result, Err(ValidationError::Timezone(_))));
     }
 }

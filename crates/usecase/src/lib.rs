@@ -1,54 +1,47 @@
 pub mod translation_error;
 
-use chrono::{DateTime, LocalResult, MappedLocalTime, NaiveDateTime, TimeZone};
+use chrono::{DateTime, LocalResult, MappedLocalTime, TimeZone};
 use chrono_tz::Tz;
-use domain::AmbiguousTimeStrategy;
+use domain::{AmbiguousTimeStrategy, TranslationRequest};
 use translation_error::TranslationError;
 
+/// Translates the requested wall-clock time from its source timezone
+/// into the target timezone.
 pub struct TimezoneTranslator {
-    time: NaiveDateTime,
-    from_tz: Tz,
-    to_tz: Tz,
-    ambiguous_time_strategy: AmbiguousTimeStrategy,
+    request: TranslationRequest,
 }
 
 impl TimezoneTranslator {
-    pub fn new(
-        time: NaiveDateTime,
-        from_tz: Tz,
-        to_tz: Tz,
-        ambiguous_time_strategy: AmbiguousTimeStrategy,
-    ) -> Self {
-        Self {
-            time,
-            from_tz,
-            to_tz,
-            ambiguous_time_strategy,
-        }
+    pub fn new(request: TranslationRequest) -> Self {
+        Self { request }
     }
 
+    /// Attaches the source timezone to the naive time, then converts
+    /// to the target timezone.
+    ///
+    /// Returns `TranslationError` when the time does not exist in the
+    /// source timezone (a DST gap).
     pub fn convert(&self) -> Result<DateTime<Tz>, TranslationError> {
-        // Extract the time from the `time` field with `from_tz` field
-        let mapped: MappedLocalTime<DateTime<Tz>> = self.from_tz.from_local_datetime(&self.time);
+        let mapped: MappedLocalTime<DateTime<Tz>> = self
+            .request
+            .source_timezone()
+            .from_local_datetime(&self.request.naive_datetime());
 
         match mapped {
-            LocalResult::Single(time) => Ok(time.with_timezone(&self.to_tz)),
+            LocalResult::Single(time) => Ok(time.with_timezone(&self.request.target_timezone())),
             LocalResult::Ambiguous(time_earliest, time_latest) => {
                 Ok(select_time_with_ambiguous_time_strategy(
-                    self.ambiguous_time_strategy,
-                    self.to_tz,
+                    self.request.strategy(),
+                    self.request.target_timezone(),
                     time_earliest,
                     time_latest,
                 ))
             }
-            LocalResult::None => {
-                let error = TranslationError::TranslationError {
-                    time: self.time,
-                    from_tz: self.from_tz,
-                    to_tz: self.to_tz,
-                };
-                Err(error)
-            }
+            LocalResult::None => Err(TranslationError::TranslationError {
+                time: self.request.naive_datetime(),
+                from_tz: self.request.source_timezone(),
+                to_tz: self.request.target_timezone(),
+            }),
         }
     }
 }
@@ -68,140 +61,100 @@ fn select_time_with_ambiguous_time_strategy(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{NaiveDate, Utc};
-    use chrono_tz::Tz;
+    use chrono::Utc;
 
-    /// This test checks if the `TimezoneTranslator` struct is created correctly.
-    /// It checks if the `time`, `from_tz`, and `to_tz` fields are set correctly.
-    /// expected: `TimezoneTranslator`
-    #[test]
-    fn test_new() {
-        let date: NaiveDate = NaiveDate::from_ymd_opt(2024, 6, 27).unwrap();
-        let time: NaiveDateTime = date.and_hms_opt(12, 0, 0).unwrap();
-        let from_tz: Tz = "America/New_York".parse().unwrap();
-        let to_tz: Tz = "Europe/London".parse().unwrap();
-        let ambiguous_time_strategy: AmbiguousTimeStrategy = AmbiguousTimeStrategy::Earliest;
-
-        let translator: TimezoneTranslator =
-            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
-
-        assert_eq!(translator.time, time);
-        assert_eq!(translator.from_tz, from_tz);
-        assert_eq!(translator.to_tz, to_tz);
-        assert_eq!(translator.ambiguous_time_strategy, ambiguous_time_strategy);
+    /// Fixture: builds a `TranslationRequest` from raw strings.
+    fn translation_request(
+        time: &str,
+        source: &str,
+        target: &str,
+        strategy: AmbiguousTimeStrategy,
+    ) -> TranslationRequest {
+        TranslationRequest::new(
+            time.parse().unwrap(),
+            source.parse().unwrap(),
+            target.parse().unwrap(),
+            strategy,
+        )
     }
 
-    /// This test checks if the `convert` method works correctly.
-    /// It checks if the method returns a `DateTime<Tz>` object.
-    /// expected: `DateTime<Tz>`
-    #[test]
-    fn test_convert() {
-        // input for the test
-        let date: NaiveDate = NaiveDate::from_ymd_opt(2024, 6, 27).unwrap();
-        let time: NaiveDateTime = date.and_hms_opt(12, 0, 0).unwrap();
-        let from_tz: Tz = "America/New_York".parse().unwrap();
-        let to_tz: Tz = "UTC".parse().unwrap();
-        let ambiguous_time_strategy: AmbiguousTimeStrategy = AmbiguousTimeStrategy::Earliest;
-
-        // expected result
-        // +4 hours from America/New_York to UTC
-        let expected_time = Utc
-            .with_ymd_and_hms(2024, 6, 27, 16, 0, 0)
+    fn utc_datetime(y: i32, mo: u32, d: u32, h: u32, mi: u32, s: u32) -> DateTime<Tz> {
+        Utc.with_ymd_and_hms(y, mo, d, h, mi, s)
             .unwrap()
-            .with_timezone(&to_tz);
-
-        // calculate the actual result
-        let translator: TimezoneTranslator =
-            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
-        let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
-
-        assert!(actual_converted_time.is_ok());
-
-        // confirm if the actual result is the same as the expected result
-        assert_eq!(actual_converted_time.unwrap(), expected_time);
+            .with_timezone(&chrono_tz::UTC)
     }
 
-    /// This test check option `AmbiguousTimeStrategy::Earliest` works correctly.
-    /// American/New_York is UTC-4 but `2024-11-03 01:30:00` is ambiguous. (after DST ends)
-    /// `2024-11-03 05:30:00` is the earliest time.
-    /// expected: `DateTime<Tz>`
     #[test]
-    fn test_earliest_ambiguous_time_strategy() {
-        // input for the test
-        let date: NaiveDate = NaiveDate::from_ymd_opt(2024, 11, 03).unwrap();
-        let time: NaiveDateTime = date.and_hms_opt(01, 30, 0).unwrap();
-        let from_tz: Tz = "America/New_York".parse().unwrap();
-        let to_tz: Tz = "UTC".parse().unwrap();
-        let ambiguous_time_strategy: AmbiguousTimeStrategy = AmbiguousTimeStrategy::Earliest;
+    fn converts_unambiguous_time_to_target_timezone() {
+        // Arrange
+        // New York is UTC-4 on 2024-06-27 (EDT)
+        let request = translation_request(
+            "2024-06-27 12:00:00",
+            "America/New_York",
+            "UTC",
+            AmbiguousTimeStrategy::Earliest,
+        );
 
-        // expected result
-        // +4, +5 hours from America/New_York to UTC (DST ends)
-        // in this case, the earliest time is 5:30
-        let expected_time = Utc
-            .with_ymd_and_hms(2024, 11, 03, 5, 30, 0)
-            .unwrap()
-            .with_timezone(&to_tz);
+        // Act
+        let converted = TimezoneTranslator::new(request).convert();
 
-        // calculate the actual result
-        let translator: TimezoneTranslator =
-            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
-        let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
-
-        assert!(actual_converted_time.is_ok());
-
-        // confirm if the actual result is the same as the expected result
-        assert_eq!(actual_converted_time.unwrap(), expected_time);
+        // Assert
+        assert_eq!(converted.unwrap(), utc_datetime(2024, 6, 27, 16, 0, 0));
     }
 
-    /// This test check option `AmbiguousTimeStrategy::Latest` works correctly.
-    /// American/New_York is UTC-4 but `2024-11-03 01:30:00` is ambiguous. (after DST ends)
-    /// `2024-11-03 06:30:00` is the latest time.
-    /// expected: `DateTime<Tz>`
     #[test]
-    fn test_latest_ambiguous_time_strategy() {
-        // input for the test
-        let date: NaiveDate = NaiveDate::from_ymd_opt(2024, 11, 03).unwrap();
-        let time: NaiveDateTime = date.and_hms_opt(01, 30, 0).unwrap();
-        let from_tz: Tz = "America/New_York".parse().unwrap();
-        let to_tz: Tz = "UTC".parse().unwrap();
-        let ambiguous_time_strategy: AmbiguousTimeStrategy = AmbiguousTimeStrategy::Latest;
+    fn selects_first_occurrence_with_earliest_strategy() {
+        // Arrange
+        // 01:30 on 2024-11-03 occurs twice in New York (DST ends);
+        // the first occurrence is 05:30 UTC
+        let request = translation_request(
+            "2024-11-03 01:30:00",
+            "America/New_York",
+            "UTC",
+            AmbiguousTimeStrategy::Earliest,
+        );
 
-        // expected result
-        // +4, +5 hours from America/New_York to UTC (DST ends)
-        // in this case, the latest time is 6:30
-        let expected_time = Utc
-            .with_ymd_and_hms(2024, 11, 03, 6, 30, 0)
-            .unwrap()
-            .with_timezone(&to_tz);
+        // Act
+        let converted = TimezoneTranslator::new(request).convert();
 
-        // calculate the actual result
-        let translator: TimezoneTranslator =
-            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
-        let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
-
-        assert!(actual_converted_time.is_ok());
-
-        // confirm if the actual result is the same as the expected result
-        assert_eq!(actual_converted_time.unwrap(), expected_time);
+        // Assert
+        assert_eq!(converted.unwrap(), utc_datetime(2024, 11, 3, 5, 30, 0));
     }
 
-    /// This test checks if the `convert` method returns an error when the output time does not exist.
-    /// expected: `TranslationError`
     #[test]
-    fn test_output_timestamp_does_not_exist() {
-        // input for the test
-        let date: NaiveDate = NaiveDate::from_ymd_opt(2024, 03, 10).unwrap();
-        let time: NaiveDateTime = date.and_hms_opt(02, 30, 0).unwrap();
-        let from_tz: Tz = "America/New_York".parse().unwrap();
-        let to_tz: Tz = "America/Los_Angeles".parse().unwrap();
-        let ambiguous_time_strategy: AmbiguousTimeStrategy = AmbiguousTimeStrategy::Latest;
+    fn selects_second_occurrence_with_latest_strategy() {
+        // Arrange
+        // 01:30 on 2024-11-03 occurs twice in New York (DST ends);
+        // the second occurrence is 06:30 UTC
+        let request = translation_request(
+            "2024-11-03 01:30:00",
+            "America/New_York",
+            "UTC",
+            AmbiguousTimeStrategy::Latest,
+        );
 
-        // calculate the actual result
-        let translator: TimezoneTranslator =
-            TimezoneTranslator::new(time, from_tz, to_tz, ambiguous_time_strategy);
-        let actual_converted_time: Result<DateTime<Tz>, TranslationError> = translator.convert();
+        // Act
+        let converted = TimezoneTranslator::new(request).convert();
 
-        // check result is error
-        assert!(actual_converted_time.is_err());
+        // Assert
+        assert_eq!(converted.unwrap(), utc_datetime(2024, 11, 3, 6, 30, 0));
+    }
+
+    #[test]
+    fn fails_when_time_does_not_exist_in_source_timezone() {
+        // Arrange
+        // 02:30 on 2024-03-10 does not exist in New York (DST gap)
+        let request = translation_request(
+            "2024-03-10 02:30:00",
+            "America/New_York",
+            "America/Los_Angeles",
+            AmbiguousTimeStrategy::Latest,
+        );
+
+        // Act
+        let converted = TimezoneTranslator::new(request).convert();
+
+        // Assert
+        assert!(converted.is_err());
     }
 }

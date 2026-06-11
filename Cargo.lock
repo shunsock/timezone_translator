@@ -190,6 +190,12 @@ checksum = "6184e33543162437515c2e2b48714794e37845ec9851711914eec9d308f6ebe8"
 [[package]]
 name = "domain"
 version = "0.3.1"
+dependencies = [
+ "chrono",
+ "chrono-tz",
+ "regex",
+ "thiserror",
+]
 
 [[package]]
 name = "float-cmp"
@@ -336,12 +342,9 @@ dependencies = [
 name = "presentation"
 version = "0.3.1"
 dependencies = [
- "chrono",
- "chrono-tz",
  "clap",
  "domain",
  "infrastructure",
- "regex",
  "thiserror",
  "usecase",
 ]

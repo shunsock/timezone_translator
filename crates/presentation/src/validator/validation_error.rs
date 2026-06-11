@@ -1,13 +1,17 @@
+use domain::{AmbiguousTimeStrategyParseError, ConversionTimeParseError, TimezoneParseError};
+
+/// Aggregates the domain parse errors that user input can produce.
+///
+/// Each variant is transparent: the user-facing message lives with
+/// the value object that failed to parse.
 #[derive(thiserror::Error, Debug, PartialEq)]
 pub(crate) enum ValidationError {
-    #[error("Validation Error: Invalid time format found. {0} (expected: YYYY-MM-DD hh:mm:ss)")]
-    TimeFormat(String),
+    #[error(transparent)]
+    Time(#[from] ConversionTimeParseError),
 
-    #[error(
-        "Validation Error: Invalid timezone found {0}. @see https://docs.rs/chrono-tz/latest/chrono_tz/enum.Tz.html"
-    )]
-    Timezone(String),
+    #[error(transparent)]
+    Timezone(#[from] TimezoneParseError),
 
-    #[error("Validation Error: Invalid ambiguous time strategy found. {ambiguous_time_strategy} (expected: earliest, latest)")]
-    AmbiguousTimeStrategy { ambiguous_time_strategy: String },
+    #[error(transparent)]
+    AmbiguousTimeStrategy(#[from] AmbiguousTimeStrategyParseError),
 }

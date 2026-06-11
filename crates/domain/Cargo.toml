@@ -8,3 +8,7 @@ description = "Domain layer of tzt: value objects and domain rules for timezone 
 publish = false
 
 [dependencies]
+chrono.workspace = true
+chrono-tz.workspace = true
+regex.workspace = true
+thiserror.workspace = true

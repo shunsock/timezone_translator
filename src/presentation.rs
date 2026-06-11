@@ -1,12 +1,12 @@
 mod command;
 mod validator;
 
+use self::command::receiver::receive_user_input;
+use self::validator::command_options_validator::validate_command_options;
+use crate::domain::TranslationRequest;
+use crate::usecase::TimezoneTranslator;
 use clap::ArgMatches;
-use command::receiver::receive_user_input;
-use domain::TranslationRequest;
 use std::process::ExitCode;
-use usecase::TimezoneTranslator;
-use validator::command_options_validator::validate_command_options;
 
 /// Entry point of the CLI.
 ///

@@ -1,9 +1,9 @@
 pub mod translation_error;
 
+use self::translation_error::TranslationError;
+use crate::domain::{AmbiguousTimeStrategy, TranslationRequest};
 use chrono::{DateTime, LocalResult, MappedLocalTime, TimeZone};
 use chrono_tz::Tz;
-use domain::{AmbiguousTimeStrategy, TranslationRequest};
-use translation_error::TranslationError;
 
 /// Translates the requested wall-clock time from its source timezone
 /// into the target timezone.

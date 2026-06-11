@@ -1,4 +1,6 @@
-use domain::{AmbiguousTimeStrategyParseError, ConversionTimeParseError, TimezoneParseError};
+use crate::domain::{
+    AmbiguousTimeStrategyParseError, ConversionTimeParseError, TimezoneParseError,
+};
 
 /// Aggregates the domain parse errors that user input can produce.
 ///

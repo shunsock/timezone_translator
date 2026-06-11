@@ -1,5 +1,4 @@
 use std::env;
-use std::env::VarError;
 
 pub(crate) struct EnvironmentVariableTzProvider {
     env_name: String,
@@ -18,12 +17,7 @@ impl EnvironmentVariableTzProvider {
 
 impl EnvironmentVariableTzProvider {
     pub(crate) fn get_env_var_tz(&self) -> Option<String> {
-        let timezone: Result<String, VarError> = env::var(&self.env_name);
-
-        match timezone {
-            Ok(tz) => Some(tz),
-            Err(_) => None,
-        }
+        env::var(&self.env_name).ok()
     }
 }
 

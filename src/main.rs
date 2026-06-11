@@ -1,48 +1,7 @@
-mod command;
-mod infrastructure;
-mod translator;
-mod validator;
+use std::process::ExitCode;
 
-use chrono::prelude::*;
-use chrono_tz::Tz;
-use clap::ArgMatches;
-use command::receiver::receive_user_input;
-use command::validated_options::validated_user_inputs::ValidatedCommandOptions;
-use std::process::exit;
-use translator::translation_error::TranslationError;
-use translator::TimezoneTranslator;
-use validator::command_options_validator::validate_command_options;
-
-fn main() {
-    let user_input_options: ArgMatches = receive_user_input();
-
-    let validated_options: ValidatedCommandOptions =
-        match validate_command_options(&user_input_options) {
-            Ok(v) => v,
-            Err(e) => {
-                eprintln!("{}", e);
-                exit(1);
-            }
-        };
-
-    let date_time_mapped: Result<DateTime<Tz>, TranslationError> = TimezoneTranslator::new(
-        validated_options.get_param_time(),
-        validated_options.get_param_from_tz(),
-        validated_options.get_param_to_tz(),
-        validated_options.ambiguous_time_strategy(),
-    )
-    .convert();
-
-    match date_time_mapped {
-        Ok(mapped) => {
-            println!("{}", mapped);
-            exit(0);
-        }
-        Err(e) => {
-            eprintln!("{}", e);
-            exit(1);
-        }
-    }
+fn main() -> ExitCode {
+    presentation::run()
 }
 
 #[cfg(test)]

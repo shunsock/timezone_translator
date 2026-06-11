@@ -1,0 +1,14 @@
+[package]
+name = "usecase"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Usecase layer of tzt: translates a naive time between timezones."
+publish = false
+
+[dependencies]
+domain.workspace = true
+chrono.workspace = true
+chrono-tz.workspace = true
+thiserror.workspace = true

@@ -1,0 +1,10 @@
+[package]
+name = "domain"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Domain layer of tzt: value objects and domain rules for timezone translation."
+publish = false
+
+[dependencies]

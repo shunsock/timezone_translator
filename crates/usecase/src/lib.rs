@@ -1,11 +1,11 @@
-pub(super) mod translation_error;
+pub mod translation_error;
 
-use crate::command::validated_options::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use chrono::{DateTime, LocalResult, MappedLocalTime, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
+use domain::AmbiguousTimeStrategy;
 use translation_error::TranslationError;
 
-pub(crate) struct TimezoneTranslator {
+pub struct TimezoneTranslator {
     time: NaiveDateTime,
     from_tz: Tz,
     to_tz: Tz,
@@ -13,7 +13,7 @@ pub(crate) struct TimezoneTranslator {
 }
 
 impl TimezoneTranslator {
-    pub(crate) fn new(
+    pub fn new(
         time: NaiveDateTime,
         from_tz: Tz,
         to_tz: Tz,
@@ -27,7 +27,7 @@ impl TimezoneTranslator {
         }
     }
 
-    pub(crate) fn convert(&self) -> Result<DateTime<Tz>, TranslationError> {
+    pub fn convert(&self) -> Result<DateTime<Tz>, TranslationError> {
         // Extract the time from the `time` field with `from_tz` field
         let mapped: MappedLocalTime<DateTime<Tz>> = self.from_tz.from_local_datetime(&self.time);
 

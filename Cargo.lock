@@ -188,6 +188,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6184e33543162437515c2e2b48714794e37845ec9851711914eec9d308f6ebe8"
 
 [[package]]
+name = "domain"
+version = "0.3.1"
+
+[[package]]
 name = "float-cmp"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -217,6 +221,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f31827a206f56af32e590ba56d5d2d085f558508192593743f16b2306495269f"
 dependencies = [
  "cc",
+]
+
+[[package]]
+name = "infrastructure"
+version = "0.3.1"
+dependencies = [
+ "regex",
 ]
 
 [[package]]
@@ -319,6 +330,20 @@ checksum = "41b740d195ed3166cd147c8047ec98db0e22ec019eb8eeb76d343b795304fb13"
 dependencies = [
  "predicates-core",
  "termtree",
+]
+
+[[package]]
+name = "presentation"
+version = "0.3.1"
+dependencies = [
+ "chrono",
+ "chrono-tz",
+ "clap",
+ "domain",
+ "infrastructure",
+ "regex",
+ "thiserror",
+ "usecase",
 ]
 
 [[package]]
@@ -442,12 +467,8 @@ name = "tzt"
 version = "0.3.1"
 dependencies = [
  "assert_cmd",
- "chrono",
- "chrono-tz",
- "clap",
  "predicates",
- "regex",
- "thiserror",
+ "presentation",
 ]
 
 [[package]]
@@ -455,6 +476,16 @@ name = "unicode-ident"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b"
+
+[[package]]
+name = "usecase"
+version = "0.3.1"
+dependencies = [
+ "chrono",
+ "chrono-tz",
+ "domain",
+ "thiserror",
+]
 
 [[package]]
 name = "utf8parse"

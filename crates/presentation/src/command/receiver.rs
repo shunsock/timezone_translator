@@ -6,7 +6,7 @@ use clap::ArgMatches;
 /// This function is used to receive user input from the command line.
 ///
 /// # Example:
-/// ```
+/// ```ignore
 /// use clap::ArgMatches;
 /// use command::receiver::receive_user_input;
 /// let user_input: ArgMatches = receive_user_input();

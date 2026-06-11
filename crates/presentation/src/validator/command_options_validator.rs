@@ -1,12 +1,12 @@
 use super::native_datetime_validator::validate_string_for_native_datetime;
 use super::timezone_validator::validate_string_for_timezone;
-use crate::command::validated_options::ambiguous_time_strategy::AmbiguousTimeStrategy;
 use crate::command::validated_options::validated_user_inputs::ValidatedCommandOptions;
 use crate::validator::ambiguous_time_strategy_validator::validate_string_for_ambiguous_time_strategy;
 use crate::validator::validation_error::ValidationError;
 use chrono::NaiveDateTime;
 use chrono_tz::Tz;
 use clap::ArgMatches;
+use domain::AmbiguousTimeStrategy;
 
 pub(crate) fn validate_command_options(
     arg: &ArgMatches,

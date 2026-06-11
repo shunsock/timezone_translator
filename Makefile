@@ -2,7 +2,7 @@
 
 install:
 	cargo build --release
-	sudo cp target/release/timezone_translator /usr/local/bin/tzt
+	sudo cp target/release/tzt /usr/local/bin/tzt
 
 uninstall:
 	sudo rm /usr/local/bin/tzt

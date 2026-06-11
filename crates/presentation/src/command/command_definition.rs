@@ -1,5 +1,6 @@
 use super::arguments::{
-    ambiguous_time_strategy::ambiguous_time_strategy, from::from, time::time, to::to,
+    ambiguous_time_strategy::ambiguous_time_strategy, from_timezone::from_timezone, time::time,
+    to_timezone::to_timezone,
 };
 use clap::Command;
 use infrastructure::provide_local_timezone_string;
@@ -17,15 +18,14 @@ use infrastructure::provide_local_timezone_string;
 /// let user_input: ArgMatches = command_provider().get_matches();
 /// ```
 pub(crate) fn command_provider() -> Command {
-    let now: String = provide_local_timezone_string();
-    let now_str: &'static str = Box::leak(now.into_boxed_str());
+    let local_timezone: String = provide_local_timezone_string();
 
     Command::new("tzt - Timezone Translator")
         .version(env!("CARGO_PKG_VERSION"))
         .author("shunsock")
         .about("translate time from one timezone to another")
         .arg(time())
-        .arg(from(now_str))
-        .arg(to(now_str))
+        .arg(from_timezone(local_timezone.clone()))
+        .arg(to_timezone(local_timezone))
         .arg(ambiguous_time_strategy())
 }

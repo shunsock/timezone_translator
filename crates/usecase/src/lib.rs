@@ -27,34 +27,22 @@ impl TimezoneTranslator {
             .source_timezone()
             .from_local_datetime(&self.request.naive_datetime());
 
-        match mapped {
-            LocalResult::Single(time) => Ok(time.with_timezone(&self.request.target_timezone())),
-            LocalResult::Ambiguous(time_earliest, time_latest) => {
-                Ok(select_time_with_ambiguous_time_strategy(
-                    self.request.strategy(),
-                    self.request.target_timezone(),
-                    time_earliest,
-                    time_latest,
-                ))
+        let time_in_source_timezone: DateTime<Tz> = match mapped {
+            LocalResult::Single(time) => time,
+            LocalResult::Ambiguous(earliest, latest) => match self.request.strategy() {
+                AmbiguousTimeStrategy::Earliest => earliest,
+                AmbiguousTimeStrategy::Latest => latest,
+            },
+            LocalResult::None => {
+                return Err(TranslationError::NonexistentTime {
+                    time: self.request.naive_datetime(),
+                    from_tz: self.request.source_timezone(),
+                    to_tz: self.request.target_timezone(),
+                })
             }
-            LocalResult::None => Err(TranslationError::TranslationError {
-                time: self.request.naive_datetime(),
-                from_tz: self.request.source_timezone(),
-                to_tz: self.request.target_timezone(),
-            }),
-        }
-    }
-}
+        };
 
-fn select_time_with_ambiguous_time_strategy(
-    strategy: AmbiguousTimeStrategy,
-    timezone: Tz,
-    time_earliest: DateTime<Tz>,
-    time_latest: DateTime<Tz>,
-) -> DateTime<Tz> {
-    match strategy {
-        AmbiguousTimeStrategy::Earliest => time_earliest.with_timezone(&timezone),
-        AmbiguousTimeStrategy::Latest => time_latest.with_timezone(&timezone),
+        Ok(time_in_source_timezone.with_timezone(&self.request.target_timezone()))
     }
 }
 

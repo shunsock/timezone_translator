@@ -1,6 +1,6 @@
 [package]
 name = "tzt"
-version = "0.3.1"
+version = "0.4.0"
 edition = "2021"
 license = "MIT"
 description = "simple command-line utility that converts a given time from one timezone to another."
@@ -12,10 +12,14 @@ keywords = ["timezone", "time", "converter", "translator", "cli"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-assert_cmd = "2.2"
 chrono = "0.4"
 chrono-tz = "0.10"
-clap = "4.5"
-predicates = "3.1"
+# feature "string": lets Arg::default_value take an owned String, so the
+# runtime-detected local timezone needs no Box::leak / &'static str hack
+clap = { version = "4.5", features = ["string"] }
 regex = "1.12.2"
 thiserror = "2.0.18"
+
+[dev-dependencies]
+assert_cmd = "2.2"
+predicates = "3.1"

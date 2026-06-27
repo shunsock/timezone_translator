@@ -50,6 +50,20 @@ Options:
           Print version
 ```
 
+## Architecture
+This project is a single crate organized into clean architecture layers.
+Each layer module has its own README describing its background, purpose, and examples.
+
+| Module | Role | README |
+|--------|------|--------|
+| `domain` | Value objects that make invalid inputs unrepresentable | [src/domain](src/domain/README.md) |
+| `usecase` | The timezone translation operation itself (DST handling) | [src/usecase](src/usecase/README.md) |
+| `infrastructure` | Detects the local timezone from the running system | [src/infrastructure](src/infrastructure/README.md) |
+| `presentation` | CLI definition, input parsing, and output | [src/presentation](src/presentation/README.md) |
+
+Dependencies flow one way: `presentation -> usecase -> domain`, with
+`infrastructure` used only by `presentation` for default values.
+
 ## Dependencies
 This project requires the following dependencies:
 

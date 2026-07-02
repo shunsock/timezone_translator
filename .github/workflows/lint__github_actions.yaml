@@ -1,0 +1,86 @@
+name: lint__github_actions
+
+# MANAGED BY shunsock/github_central — このファイルは gh-infra で配信される。
+# 変更は github_central 側の workflows/ で行うこと。直接編集しても同期で上書きされうる。
+#
+# .github/workflows 配下の GitHub Actions workflow を静的解析する。
+#   actionlint: 構文・式・埋め込み shell script の検証
+#   ghalint:    workflow のセキュリティポリシー (permission 明示・SHA pin など) の強制
+#   zizmor:     supply-chain 観点のセキュリティ監査
+# 3 ツールは互いに独立した観点を持つため job を分離し、片方が落ちても他方を実行する。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      # actionlint は runner 同梱の shellcheck を呼び出し run ブロックの shell も検証する。
+      # go install で version を固定し再現性を担保する (runner に Go は同梱)。
+      - name: Install actionlint
+        run: |
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Run actionlint
+        run: actionlint
+
+  ghalint:
+    name: ghalint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Install ghalint
+        run: |
+          go install github.com/suzuki-shunsuke/ghalint/cmd/ghalint@v1.5.6
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      - name: Run ghalint
+        run: ghalint run
+
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      # zizmor 本体の version を固定し再現性を担保する。
+      # private リポジトリ (GitHub Advanced Security 未契約) にも配信するため SARIF upload は
+      # 使わない。advanced-security: false で annotation に fallback し (security-events 権限も
+      # 不要)、online-audits: false で外部 API へ問い合わせず決定的に監査する。
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        with:
+          version: v1.25.2
+          advanced-security: false
+          annotations: true
+          online-audits: false

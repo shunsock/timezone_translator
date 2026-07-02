@@ -1,0 +1,50 @@
+name: lint__shell
+
+# MANAGED BY shunsock/github_central — このファイルは gh-infra で配信される。
+# 変更は github_central 側の workflows/ で行うこと。直接編集しても同期で上書きされうる。
+#
+# リポジトリ内の shell script に対して format (shfmt) と lint (shellcheck) を実行する。
+# shfmt -f が shebang と拡張子から script を検出するため、shell script を持たない
+# リポジトリでは何も実行せず成功する (xargs -r)。全リポジトリへ安全に配信できる。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 既定では何も書き込ませない (最小権限)。checkout に必要な read のみ付与する。
+permissions:
+  contents: read
+
+jobs:
+  shell_lint:
+    name: shfmt & shellcheck
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          # lint 専用 job では認証情報を残す必要がない (最小権限)。
+          persist-credentials: false
+
+      # shellcheck は runner に同梱されているが shfmt は無いため go install で導入する。
+      # version を固定して再現性を担保する。
+      - name: Install shfmt
+        run: |
+          go install mvdan.cc/sh/v3/cmd/shfmt@v3.10.0
+          echo "$(go env GOPATH)/bin" >> "${GITHUB_PATH}"
+
+      # shfmt -f が shebang と拡張子から shell script を検出する。
+      # これを唯一の検出源とし、整形差分があれば失敗する。
+      - name: Check formatting (shfmt)
+        run: shfmt -f . | xargs -r -d '\n' shfmt -d
+
+      # --external-sources で source 先 (bin/library/*.sh) を追跡し、
+      # 呼び出し元込みの文脈で lint する。format が落ちても lint は実行する。
+      - name: Lint (shellcheck)
+        if: ${{ !cancelled() }}
+        run: shfmt -f . | xargs -r -d '\n' shellcheck --external-sources

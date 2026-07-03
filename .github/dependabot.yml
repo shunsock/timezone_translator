@@ -4,3 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    # 公開直後の不安定なバージョンを避けるため、リリースから一定日数が経過するまで
+    # 更新 PR を作らない (zizmor: insufficient-cooldown 対策)。
+    cooldown:
+      default-days: 7

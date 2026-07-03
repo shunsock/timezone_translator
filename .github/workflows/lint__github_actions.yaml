@@ -78,7 +78,7 @@ jobs:
       # 使わない。advanced-security: false で annotation に fallback し (security-events 権限も
       # 不要)、online-audits: false で外部 API へ問い合わせず決定的に監査する。
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7
         with:
           version: v1.25.2
           advanced-security: false

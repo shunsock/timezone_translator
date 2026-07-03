@@ -8,3 +8,25 @@ updates:
     # 更新 PR を作らない (zizmor: insufficient-cooldown 対策)。
     cooldown:
       default-days: 7
+    # minor と patch をそれぞれ 1 本の PR にまとめる。major はグループに載らず
+    # 個別 PR のままになるため、auto-merge (非 major のみ) と両立する。
+    groups:
+      minor:
+        update-types:
+          - "minor"
+      patch:
+        update-types:
+          - "patch"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+    groups:
+      minor:
+        update-types:
+          - "minor"
+      patch:
+        update-types:
+          - "patch"

@@ -9,17 +9,28 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+# 既定では何も書き込ませない (最小権限)。checkout に必要な read のみ付与する。
+permissions:
+  contents: read
+
 jobs:
   build:
 
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    permissions:
+      contents: read
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        # build/test 専用 job では認証情報を残す必要がない (最小権限)。
+        persist-credentials: false
     - name: Build
       run: cargo build --verbose
     - name: Check

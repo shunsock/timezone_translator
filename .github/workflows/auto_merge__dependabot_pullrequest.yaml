@@ -1,0 +1,40 @@
+name: auto_merge__dependabot_pullrequest
+
+# MANAGED BY shunsock/github_central — このファイルは gh-infra で配信される。
+# 変更は github_central 側の workflows/ で行うこと。直接編集しても同期で上書きされうる。
+#
+# 非 major の dependabot PR を auto-merge する。実際のマージは各リポジトリの
+# ruleset の required_status_checks が全通過してから GitHub が行う (即マージにはならない)。
+# major 更新は破壊的変更を含みうるため人間のレビューを残す。
+
+on:
+  pull_request:
+    branches: [main]
+
+# 既定は最小権限。auto-merge の有効化に必要な権限は job 側で付与する。
+permissions:
+  contents: read
+
+jobs:
+  automerge:
+    # dependabot が作成した PR のみを対象にする。github.actor は spoofable なため、
+    # pull_request イベントで信頼できる PR 作成者 (user.login) で判定する。
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      # auto-merge の有効化に必要。
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      # major 以外 (minor / patch) のみ auto-merge を有効化する。
+      - name: Enable auto-merge for non-major updates
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-major' }}
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge --auto --merge "${PR_URL}"

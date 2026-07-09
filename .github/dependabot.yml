@@ -30,6 +30,18 @@ updates:
     # サポートしないため default-days のみ指定する。
     cooldown:
       default-days: 7
+    # github_central が配信する managed workflow (lint__* / auto_merge__*) が使う
+    # アクションを ignore する。これらのバージョンは中央 (workflows/) が single source
+    # of truth で、更新は github_central 側の PR で明示的に行う。下流の Dependabot が
+    # managed ファイルを bump して merge すると、apply が中央値へ戻そうとして drift の
+    # 綱引きになるため止める。ワークフローの安全性 (危険な変更の検知) は managed の
+    # lint__github_actions が走らせる zizmor が担保するので、ここで更新を止めても穴は
+    # 空かない。Dependabot は github-actions でファイル単位の除外ができないため、
+    # dependency-name 単位で ignore する (自前 workflow の同一アクションも対象になる)。
+    ignore:
+      - dependency-name: "actions/checkout"
+      - dependency-name: "dependabot/fetch-metadata"
+      - dependency-name: "zizmorcore/zizmor-action"
     groups:
       minor:
         update-types:

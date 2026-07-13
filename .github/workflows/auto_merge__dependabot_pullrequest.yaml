@@ -9,7 +9,7 @@ name: auto_merge__dependabot_pullrequest
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 # 既定は最小権限。auto-merge の有効化に必要な権限は job 側で付与する。
 permissions:

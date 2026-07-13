@@ -9,9 +9,9 @@ name: lint__shell
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 # 既定では何も書き込ませない (最小権限)。checkout に必要な read のみ付与する。
 permissions:

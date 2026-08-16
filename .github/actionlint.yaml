@@ -1,0 +1,11 @@
+# MANAGED BY shunsock/github_central — このファイルは gh-infra で配信される。
+# 変更は github_central 側の owners/shunsock/files/all_repository/ で行うこと。
+#
+# actionlint は runs-on のラベルを GitHub ホストランナーの既知リストと照合し、
+# 未知のラベルをエラーにする。配信 workflow は Ubicloud のマネージドランナーを
+# 使うため、そのラベルをここで宣言して runner-label 検査を通す。
+# サイズ (standard-2/4/...) は配信先が独自 workflow で自由に選べるよう
+# glob で全サイズを許可する。
+self-hosted-runner:
+  labels:
+    - ubicloud-*

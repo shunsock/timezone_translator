@@ -9,9 +9,9 @@ name: lint__github_actions
 #   zizmor:     supply-chain 観点のセキュリティ監査
 # 3 ツールは互いに独立した観点を持つため job を分離し、片方が落ちても他方を実行する。
 
+# CONSTRAINT: push トリガーを付けてはならない。
+# REASON: 配信先は PR 必須運用で、push 起動は PR 検査済み commit の再実行になり課金が重複するため。
 on:
-  push:
-    branches: [main, develop]
   pull_request:
     branches: [main, develop]
 
@@ -21,7 +21,7 @@ permissions:
 jobs:
   actionlint:
     name: actionlint
-    runs-on: ubuntu-24.04
+    runs-on: ubicloud-standard-2
     timeout-minutes: 5
     permissions:
       contents: read
@@ -43,7 +43,7 @@ jobs:
 
   ghalint:
     name: ghalint
-    runs-on: ubuntu-24.04
+    runs-on: ubicloud-standard-2
     timeout-minutes: 5
     permissions:
       contents: read
@@ -63,7 +63,7 @@ jobs:
 
   zizmor:
     name: zizmor
-    runs-on: ubuntu-24.04
+    runs-on: ubicloud-standard-2
     timeout-minutes: 5
     permissions:
       contents: read
@@ -78,7 +78,7 @@ jobs:
       # 使わない。advanced-security: false で annotation に fallback し (security-events 権限も
       # 不要)、online-audits: false で外部 API へ問い合わせず決定的に監査する。
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7
+        uses: zizmorcore/zizmor-action@6fc4b006235f201fdab3722e17240ab420d580e5 # v0.6.1
         with:
           version: v1.25.2
           advanced-security: false

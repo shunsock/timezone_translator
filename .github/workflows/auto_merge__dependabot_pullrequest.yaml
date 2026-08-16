@@ -20,7 +20,7 @@ jobs:
     # dependabot が作成した PR のみを対象にする。github.actor は spoofable なため、
     # pull_request イベントで信頼できる PR 作成者 (user.login) で判定する。
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubicloud-standard-2
     timeout-minutes: 5
     permissions:
       # auto-merge の有効化に必要。

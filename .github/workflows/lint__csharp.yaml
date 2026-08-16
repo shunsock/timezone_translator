@@ -7,9 +7,9 @@ name: lint__csharp
 # .cs を持たないリポジトリでは検出ステップで止まり no-op で成功するため、
 # 全リポジトリへ安全に配信できる。
 
+# CONSTRAINT: push トリガーを付けてはならない。
+# REASON: 配信先は PR 必須運用で、push 起動は PR 検査済み commit の再実行になり課金が重複するため。
 on:
-  push:
-    branches: [main, develop]
   pull_request:
     branches: [main, develop]
 
@@ -19,7 +19,7 @@ permissions:
 jobs:
   csharpier:
     name: csharpier
-    runs-on: ubuntu-24.04
+    runs-on: ubicloud-standard-2
     timeout-minutes: 5
     permissions:
       contents: read

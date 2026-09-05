@@ -119,6 +119,23 @@ if you installed by curl or built from source.
 make uninstall
 ```
 
+## Development
+The development environment is managed by [LazyNix](https://github.com/shunsock/lazynix). `lazynix.yaml` declares the toolchain and `flake.nix` / `flake.lock` are generated from it.
+
+```bash
+# Enter the development shell (rustc, cargo, clippy, rustfmt, rust-analyzer)
+nix run github:shunsock/lazynix -- develop
+
+# Run the full check suite (build, fmt, clippy, test)
+nix run github:shunsock/lazynix -- test
+```
+
+Plain Nix also works since `flake.nix` is a standard flake:
+
+```bash
+nix develop
+```
+
 ## Ambiguous Time Strategy
 There are two strategies for ambiguous times: `earliest` and `latest` to handle ambiguous times.
 

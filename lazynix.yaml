@@ -1,0 +1,34 @@
+devShell:
+  allowUnfree: false
+  package:
+    stable:
+      - name: cargo
+      - name: rustc
+      - name: clippy
+      - name: rustfmt
+      - name: rust-analyzer
+    unstable: []
+    pinned: []
+
+  shellHook:
+    - "echo \"tzt dev environment: $(rustc --version)\""
+
+  task:
+    fmt:
+      description: "Format Rust sources"
+      commands:
+        - "cargo fmt"
+    build:
+      description: "Build the tzt binary (debug)"
+      commands:
+        - "cargo build"
+    review:
+      description: "Run a subset of tests via CLI_ARGS"
+      commands:
+        - "cargo test {{.CLI_ARGS}}"
+
+  test:
+    - "cargo build"
+    - "cargo fmt --check"
+    - "cargo clippy -- --deny warnings"
+    - "cargo test"

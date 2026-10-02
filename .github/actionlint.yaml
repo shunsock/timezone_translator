@@ -9,3 +9,10 @@
 self-hosted-runner:
   labels:
     - ubicloud-*
+# CONSTRAINT: concurrency の queue キーの指摘は除外しなくてはならない。
+# REASON: GitHub は queue を受け付けるが actionlint v1.7.12 が未対応のため。
+# TODO: actionlint が queue に対応したらこの除外を削除する。
+paths:
+  .github/workflows/**/*.{yml,yaml}:
+    ignore:
+      - 'unexpected key "queue" for "concurrency" section'
